@@ -64,7 +64,7 @@ if t==0
     else
         % Error: recta no válida
         disp('La trayectoria fijada no es valida. El punto inicial no es alcanzable')
-        set_param(gcs, 'SimulationCommand', 'stop')
+        
     end
 end
 
