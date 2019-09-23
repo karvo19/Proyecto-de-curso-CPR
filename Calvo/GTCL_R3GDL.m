@@ -26,7 +26,7 @@ persistent q_t;
 if t == 0 
     ti = inicio;
     XYZi = XYZinicio;
-    q_t = cin_in(XYZi);
+    q_t = CinematicaInversa(XYZi);
     flag = 2;
     
     % Variables articulares
@@ -36,21 +36,19 @@ if t == 0
     L3 = 0.50;
     
     % Condicion para que la recta esté en el espacio de tarea
-    if (L2 - L3)^2 <= (xi^2 + yi^2 + (zi - L0 - L1)^2) && (xi^2 + yi^2 + (zi - L0 - L1)^2) <= (L2 + L3)^2
-        if (L2 - L3)^2 <= (xf^2 + yf^2 + (zf - L0 - L1)^2) && (xf^2 + yf^2 + (zf - L0 - L1)^2) <= (L2 + L3)^2
+    if (L2 - L3)^2 <= (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) && (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) <= (L2 + L3)^2
+        if (L2 - L3)^2 <= (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) && (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) <= (L2 + L3)^2
             % si los dos extremos de la recta están en el espacio de trabajo
             % comprobamos si tambien lo está la recta que los une
-            C = [0, 0, L0 + L1];
-            Pini = [xi, yi, zi];
-            u = [xf - xi, yf - yi, zf - zi]/((xf - xi)^2 + (yf - yi)^2 + (zf - zi)^2);
+            C = [0, 0, L0 + L1];        % Centro de las esferas
+            u = (XYZfin-XYZini)'/norm(XYZfin-XYZini); % Vector unitario en direccion de la trayectoria
+            PiC = C - XYZinicio;    % Vector de XYZinicio a C
+            Proy = ((u*PiC')/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
 
-            PiniC = C - Pini;
-            Proy = ((u*PiniC')/(u*u'))*u;
+            distancia = norm(PiC - Proy); % Menor distancia de C a la trayectoria
 
-            d = norm(PiniC - Proy);
-
-            if d >= (L2 - L3)
-                % La recta está dentro del espacio de tarea. Calculamos:
+            if distancia >= (L2 - L3)
+                % La recta está dentro del espacio de tarea.
                 flag = 1;
             else
                 disp('La trayectoria fijada no es valida. Atraviesa zonas no alcanzables')
@@ -73,8 +71,8 @@ if (t >= ti) && (t < (ti+T))
     if flag == 1
         
         XYZf = XYZi + (XYZfin-XYZinicio)/duracion*T;
-        q_i = cin_in(XYZi);
-        q_f = cin_in(XYZf);
+        q_i = CinematicaInversa(XYZi);
+        q_f = CinematicaInversa(XYZf);
         
         qd_i = [0 0 0]';
         qd_f = [0 0 0]';
