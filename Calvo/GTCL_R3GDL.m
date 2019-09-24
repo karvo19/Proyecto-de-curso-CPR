@@ -41,7 +41,7 @@ if t == 0
             % si los dos extremos de la recta están en el espacio de trabajo
             % comprobamos si tambien lo está la recta que los une
             C = [0, 0, L0 + L1];        % Centro de las esferas
-            u = (XYZfin-XYZini)'/norm(XYZfin-XYZini); % Vector unitario en direccion de la trayectoria
+            u = (XYZfin-XYZinicio)'/norm(XYZfin-XYZinicio); % Vector unitario en direccion de la trayectoria
             PiC = C - XYZinicio;    % Vector de XYZinicio a C
             Proy = ((u*PiC')/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
 
