@@ -40,10 +40,10 @@ if t == 0
         if (L2 - L3)^2 <= (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) && (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) <= (L2 + L3)^2
             % si los dos extremos de la recta están en el espacio de trabajo
             % comprobamos si tambien lo está la recta que los une
-            C = [0, 0, L0 + L1];        % Centro de las esferas
+            C = [0; 0; L0 + L1];        % Centro de las esferas
             u = (XYZfin - XYZinicio)'/norm(XYZfin - XYZinicio); % Vector unitario en direccion de la trayectoria
             PiC = C - XYZinicio;    % Vector de XYZinicio a C
-            Proy = ((u*PiC')/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
+            Proy = ((u*PiC)/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
 
             distancia = norm(PiC - Proy); % Menor distancia de C a la trayectoria
 
@@ -108,10 +108,10 @@ end
     % Comprobamos en que tramo ha sido llamada la funcion
     if t < inicio
         % t < tiempo de inicio (reposo inicial) --> ref = q_inicio
-        trayectoria = q(:, 1);
+        trayectoria = [XYZinicio; [0 0 0]'; [0 0 0]'];
     elseif t > inicio + duracion
         % t > tiempo de inicio + duracion (reposo final) --> ref = q_fin
-        trayectoria = q(:, n + 2);
+        trayectoria = [XYZfin; [0 0 0]'; [0 0 0]'];
     else
         % Hay que detectar en que tramo nos encontramos
         for i = 1:(n+1)
@@ -121,6 +121,13 @@ end
             end
         end
         % Evaluamos la ecuacion para el tramo y tiempo actual
-        trayectoria = a(:, tramo) + b(:, tramo)*(t - t_tramos(tramo)) + c(:, tramo)*(t - t_tramos(tramo))^2 + d(:, tramo)*(t - t_tramos(tramo))^3;
+            % q = a + b*(t - ti) + c*(t - ti)^2 + d*(t - ti)^3
+            % qd = b + c*(2*t - 2*ti) + 3*d*(t - ti)^2
+            % qdd = 2*c + 3*d*(2*t - 2*ti)
+        q_t = a(:, tramo) + b(:, tramo)*(t - t_tramos(tramo)) + c(:, tramo)*(t - t_tramos(tramo))^2 + d(:, tramo)*(t - t_tramos(tramo))^3;
+        qd_t = b(:, tramo) + c(:, tramo)*(2*t - 2*t_tramos(tramo)) + 3*d(:, tramo)*(t - t_tramos(tramo))^2;
+        qdd_t = 2*c(:, tramo) + 3*d(:, tramo)*(2*t - 2*t_tramos(tramo));
+        
+        trayectoria = [q_t; qd_t; qdd_t];
     end
 return
