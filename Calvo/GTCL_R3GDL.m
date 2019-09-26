@@ -13,24 +13,20 @@ t = in(10);
 
 T = duracion/(n+1);
 
-persistent ti;
 persistent flag;
-persistent XYZi;
-persistent XYZf;
 persistent a;
 persistent b;
 persistent c;
 persistent d;
-persistent q_t;
-persistent qd_i;
-persistent q_1_t;
+persistent t_tramos;
 
-if t == 0 
-    ti = inicio;
-    XYZi = XYZinicio;
-    q_t = CinematicaInversa(XYZi);
-    qd_i = [0 0 0]';
-    q_1_t = CinematicaInversa(XYZi);
+% t_tramos:     inicio         inicio+T     inicio+2T   inicio+...T   inicio+(n-1)T   inicio+nT  inicio+(n+1)T
+% trayectoria: (inicio)----------(p1)---------(p2)---------(...)----------(pn-1)----------(pn)--------(fin)
+% numero de tramo:         1             2            3             n-1              n           n+1
+
+% set up de las variables y calculos/comprobaciones a realizar unicamente la primera vez
+if t == 0
+    tramo = 0;
     flag = 2;
     
     % Dimensiones de los eslabones
@@ -68,52 +64,54 @@ if t == 0
         disp('La trayectoria fijada no es valida. El punto inicial no es alcanzable')
         set_param(gcs, 'SimulationCommand', 'stop')
     end
-end
-
-if (t >= ti) && (t < (ti+T))
-
+    
     if flag == 1
-        
-        % Ecuacion de la trayectoria en cartesianas (solo tramo actual)
-        % XYZi -> Punto inicial del tramo actual
-        % XYZf -> Punto final del tramo actual
-        XYZf = XYZi + (XYZfin - XYZinicio)/duracion*T;
-        
-        % Puntos inicial y final en variables articulares
-        q_i = CinematicaInversa(XYZi);
-        q_f = CinematicaInversa(XYZf);
-        
+        % Calculamos los puntos muestreados de la trayectoria en coordenadas articulares
+        q_t = zeros(3, n + 2);
+        t_tramos = zeros(1, n + 2);
+        pendiente = (XYZfin - XYZinicio)/duracion;
+        for punto = 0:(n+1)
+            q_t(:,punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
+            % Calculamos los tiempos a los que comienza cada tramo
+            t_tramos(punto+1) = inicio + T * punto;
+        end
+
         % Método heurístico para obtener las velocidades de cada tramo
-        if (sign(q_i - q_1_t) ~= sign(q_f - q_i))
-            qd_f = [0 0 0]';
-        elseif (q_i == q_1_t || q_f == q_i || )
-            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
-        elseif (q_f == q_i)
-            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
-        else
-            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
+        qd_t = zeros(3, n + 2);
+        qd_t(:, 1) = [0 0 0]';
+        qd_t(:, n + 2) = [0 0 0]';
+        for i = 2:(n + 1)
+            if (sign(q_t(:,i) - q_t(:,i-1)) ~= sign(q_t(:,i+1) - q_t(:,i)))
+                qd_t(:,i) = [0 0 0]';
+            else
+                qd_t(:,i) = [((q_t(:,i+1) - q_t(:,i))/T + (q_t(:,i) - q_t(:,i))/T)/2];
+            end
+        end
+
+        % Interpolamos cada par de puntos con un polinomio de orden 3
+        a = zeros(3, n + 1);
+        b = zeros(3, n + 1);
+        c = zeros(3, n + 1);
+        d = zeros(3, n + 1);
+        for i = 1:(n+1)
+            a(:, i) = q_t(:,i);
+            b(:, i) = qd_t(:,i);
+            c(:, i) = 3/T^2 * (q_t(:,i+1) - q_t(:,i)) - 1/T * (qd_t(:,i+1) + 2*qd_t(:,i));
+            d(:, i) = - 2/T^3 * (q_t(:,i+1) - q_t(:,i)) + 1/T^2 * (qd_t(:,i+1) + qd_t(:,i));
         end
         
-        a = q_i;
-        b = qd_i;
-        c = 3/T^2*(q_f-q_i)-1/T*(qd_f+2*qd_i);
-        d = -2/T^3*(q_f-q_i)+1/T^2*(qd_f+qd_i);
-        
-        XYZi = XYZf;
         flag = 0;
-    end        
-    
-    if flag == 0
-        q_t = a+b*(t-ti)+c*(t-ti)^2+d*(t-ti)^3;
     end
-    
-elseif t >= (ti+T)
-    q_1_t=q_t;
-    ti = t;
-    flag = 1;
 end
 
-trayectoria = q_t;
+% Calculos a realizar una vez por llamada a la función:
+    % Comprobamos en que tramo ha sido llamada la funcion
+    % t < tiempo de inicio (reposo inicial) --> ref = q_inicio
+    % t > tiempo de inicio + duracion (reposo final) --> ref = q_fin
+    % cc: ref --> q_t = a+b*(t-ti)+c*(t-ti)^2+d*(t-ti)^3;
+    
+    
+    % Evaluamos la ecuacion para el tramo y tiempo actual
+    trayectoria = a(:, tramo) + b(:, tramo)*(t - t_tramos(tramo)) + c(:, tramo)*(t - t_tramos(tramo))^2 + d(:, tramo)*(t - t_tramos(tramo))^3;
 
 return
-
