@@ -29,11 +29,11 @@ if t == 0
     ti = inicio;
     XYZi = XYZinicio;
     q_t = CinematicaInversa(XYZi);
-    qd_i=[0 0 0]';
-    q_1_t=cin_in(XYZi);
+    qd_i = [0 0 0]';
+    q_1_t = CinematicaInversa(XYZi);
     flag = 2;
     
-    % Variables articulares
+    % Dimensiones de los eslabones
     L0 = 1.00;
     L1 = 0.40;
     L2 = 0.70;
@@ -45,7 +45,7 @@ if t == 0
             % si los dos extremos de la recta están en el espacio de trabajo
             % comprobamos si tambien lo está la recta que los une
             C = [0, 0, L0 + L1];        % Centro de las esferas
-            u = (XYZfin-XYZinicio)'/norm(XYZfin-XYZinicio); % Vector unitario en direccion de la trayectoria
+            u = (XYZfin - XYZinicio)'/norm(XYZfin - XYZinicio); % Vector unitario en direccion de la trayectoria
             PiC = C - XYZinicio;    % Vector de XYZinicio a C
             Proy = ((u*PiC')/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
 
@@ -74,18 +74,24 @@ if (t >= ti) && (t < (ti+T))
 
     if flag == 1
         
-        XYZf = XYZi + (XYZfin-XYZinicio)/duracion*T;
+        % Ecuacion de la trayectoria en cartesianas (solo tramo actual)
+        % XYZi -> Punto inicial del tramo actual
+        % XYZf -> Punto final del tramo actual
+        XYZf = XYZi + (XYZfin - XYZinicio)/duracion*T;
+        
+        % Puntos inicial y final en variables articulares
         q_i = CinematicaInversa(XYZi);
         q_f = CinematicaInversa(XYZf);
         
-        if (sign(q_i-q_1_t)~=sign(q_f-q_i))
-            qd_f=[0 0 0]';
-        elseif (q_i==q_1_t)
-            qd_f=transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
-        elseif (q_f==q_i)
-            qd_f=transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
+        % Método heurístico para obtener las velocidades de cada tramo
+        if (sign(q_i - q_1_t) ~= sign(q_f - q_i))
+            qd_f = [0 0 0]';
+        elseif (q_i == q_1_t || q_f == q_i || )
+            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
+        elseif (q_f == q_i)
+            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
         else
-            qd_f=transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
+            qd_f = transpose([(q_f-q_i)/T+(q_i-q_1_t)/T]/2);
         end
         
         a = q_i;
