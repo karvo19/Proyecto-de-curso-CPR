@@ -20,7 +20,7 @@ persistent c;
 persistent d;
 persistent t_tramos;
 
-% t_tramos:     inicio         inicio+T     inicio+2T   inicio+...T   inicio+(n-1)T   inicio+nT  inicio+(n+1)T
+% tiempo:       inicio         inicio+T     inicio+2T   inicio+...T   inicio+(n-1)T   inicio+nT  inicio+(n+1)T
 % trayectoria: (inicio)----------(p1)---------(p2)---------(...)----------(pn-1)----------(pn)--------(fin)
 % numero de tramo:         1             2            3             n-1              n           n+1
 
@@ -67,24 +67,24 @@ if t == 0
     
     if flag == 1
         % Calculamos los puntos muestreados de la trayectoria en coordenadas articulares
-        q_t = zeros(3, n + 2);
+        q = zeros(3, n + 2);
         t_tramos = zeros(1, n + 2);
         pendiente = (XYZfin - XYZinicio)/duracion;
         for punto = 0:(n+1)
-            q_t(:,punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
+            q(:,punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
             % Calculamos los tiempos a los que comienza cada tramo
             t_tramos(punto+1) = inicio + T * punto;
         end
 
         % Método heurístico para obtener las velocidades de cada tramo
-        qd_t = zeros(3, n + 2);
-        qd_t(:, 1) = [0 0 0]';
-        qd_t(:, n + 2) = [0 0 0]';
+        qd = zeros(3, n + 2);
+        qd(:, 1) = [0 0 0]';
+        qd(:, n + 2) = [0 0 0]';
         for i = 2:(n + 1)
-            if (sign(q_t(:,i) - q_t(:,i-1)) ~= sign(q_t(:,i+1) - q_t(:,i)))
-                qd_t(:,i) = [0 0 0]';
+            if (sign(q(:,i) - q(:,i-1)) ~= sign(q(:,i+1) - q(:,i)))
+                qd(:,i) = [0 0 0]';
             else
-                qd_t(:,i) = [((q_t(:,i+1) - q_t(:,i))/T + (q_t(:,i) - q_t(:,i))/T)/2];
+                qd(:,i) = [((q(:,i+1) - q(:,i))/T + (q(:,i) - q(:,i))/T)/2];
             end
         end
 
@@ -94,10 +94,10 @@ if t == 0
         c = zeros(3, n + 1);
         d = zeros(3, n + 1);
         for i = 1:(n+1)
-            a(:, i) = q_t(:,i);
-            b(:, i) = qd_t(:,i);
-            c(:, i) = 3/T^2 * (q_t(:,i+1) - q_t(:,i)) - 1/T * (qd_t(:,i+1) + 2*qd_t(:,i));
-            d(:, i) = - 2/T^3 * (q_t(:,i+1) - q_t(:,i)) + 1/T^2 * (qd_t(:,i+1) + qd_t(:,i));
+            a(:, i) = q(:,i);
+            b(:, i) = qd(:,i);
+            c(:, i) = 3/T^2 * (q(:,i+1) - q(:,i)) - 1/T * (qd(:,i+1) + 2*qd(:,i));
+            d(:, i) = - 2/T^3 * (q(:,i+1) - q(:,i)) + 1/T^2 * (qd(:,i+1) + qd(:,i));
         end
         
         flag = 0;
@@ -106,12 +106,21 @@ end
 
 % Calculos a realizar una vez por llamada a la función:
     % Comprobamos en que tramo ha sido llamada la funcion
-    % t < tiempo de inicio (reposo inicial) --> ref = q_inicio
-    % t > tiempo de inicio + duracion (reposo final) --> ref = q_fin
-    % cc: ref --> q_t = a+b*(t-ti)+c*(t-ti)^2+d*(t-ti)^3;
-    
-    
-    % Evaluamos la ecuacion para el tramo y tiempo actual
-    trayectoria = a(:, tramo) + b(:, tramo)*(t - t_tramos(tramo)) + c(:, tramo)*(t - t_tramos(tramo))^2 + d(:, tramo)*(t - t_tramos(tramo))^3;
-
+    if t < inicio
+        % t < tiempo de inicio (reposo inicial) --> ref = q_inicio
+        trayectoria = q(:, 1);
+    elseif t > inicio + duracion
+        % t > tiempo de inicio + duracion (reposo final) --> ref = q_fin
+        trayectoria = q(:, n + 2);
+    else
+        % Hay que detectar en que tramo nos encontramos
+        for i = 1:(n+1)
+            if t_tramos(i) <= t && t < t_tramos(i+1)
+                tramo = i;
+                break
+            end
+        end
+        % Evaluamos la ecuacion para el tramo y tiempo actual
+        trayectoria = a(:, tramo) + b(:, tramo)*(t - t_tramos(tramo)) + c(:, tramo)*(t - t_tramos(tramo))^2 + d(:, tramo)*(t - t_tramos(tramo))^3;
+    end
 return
