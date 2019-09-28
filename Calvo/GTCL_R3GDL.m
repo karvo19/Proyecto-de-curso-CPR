@@ -14,6 +14,7 @@ t = in(10);
 T = duracion/(n+1);
 
 persistent flag;
+persistent q;
 persistent a;
 persistent b;
 persistent c;
@@ -71,7 +72,7 @@ if t == 0
         t_tramos = zeros(1, n + 2);
         pendiente = (XYZfin - XYZinicio)/duracion;
         for punto = 0:(n+1)
-            q(:,punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
+            q(:, punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
             % Calculamos los tiempos a los que comienza cada tramo
             t_tramos(punto+1) = inicio + T * punto;
         end
@@ -106,12 +107,12 @@ end
 
 % Calculos a realizar una vez por llamada a la función:
     % Comprobamos en que tramo ha sido llamada la funcion
-    if t < inicio
+    if t <= inicio
         % t < tiempo de inicio (reposo inicial) --> ref = q_inicio
-        trayectoria = [XYZinicio; [0 0 0]'; [0 0 0]'];
-    elseif t > inicio + duracion
+        trayectoria = [q(:, 1); [0 0 0]'; [0 0 0]'];
+    elseif t >= inicio + duracion
         % t > tiempo de inicio + duracion (reposo final) --> ref = q_fin
-        trayectoria = [XYZfin; [0 0 0]'; [0 0 0]'];
+        trayectoria = [q(:, n + 2); [0 0 0]'; [0 0 0]'];
     else
         % Hay que detectar en que tramo nos encontramos
         for i = 1:(n+1)
