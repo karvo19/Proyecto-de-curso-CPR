@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.106"
+    ComputedModelVersion    "1.107"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -45,7 +45,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [683.0, 0.0, 683.0, 728.0]
+      Location		      [0.0, 0.0, 683.0, 728.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -79,7 +79,7 @@ Model {
 	  IsActive		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "10"
-	  Extents		  [1328.0, 560.0]
+	  Extents		  [629.0, 544.0]
 	  ZoomFactor		  [1.0]
 	  Offset		  [-0.4500008225440979, 0.0]
 	}
@@ -117,9 +117,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Raúl"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Sep 29 20:54:53 2019"
-  RTWModifiedTimeStamp	  491690854
-  ModelVersionFormat	  "1.%<AutoIncrement:106>"
+  LastModifiedDate	  "Mon Sep 30 16:11:34 2019"
+  RTWModifiedTimeStamp	  491760688
+  ModelVersionFormat	  "1.%<AutoIncrement:107>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
@@ -1786,7 +1786,7 @@ Model {
   }
   System {
     Name		    "slGTC_3gdl"
-    Location		    [683, 0, 1366, 728]
+    Location		    [0, 0, 683, 728]
     Open		    on
     PortBlocksUseCompactNotation off
     ModelBrowserVisibility  off
@@ -1801,7 +1801,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "80"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "80"
+    SIDHighWatermark	    "85"
     Block {
       BlockType		      MATLABFcn
       Name		      "CinematicaDirecta\nR3GDL"
@@ -1841,10 +1841,10 @@ Model {
     Block {
       BlockType		      Constant
       Name		      "Duración del\nmovimiento"
-      SID		      "7"
-      Position		      [110, 240, 140, 270]
-      ZOrder		      -5
-      Value		      "0.5"
+      SID		      "81"
+      Position		      [90, 240, 135, 270]
+      ZOrder		      10
+      Value		      "Duracion"
     }
     Block {
       BlockType		      From
@@ -1870,7 +1870,7 @@ Model {
       Variant		      off
       System {
 	Name			"GTCL 3 GDL"
-	Location		[683, 0, 1366, 728]
+	Location		[0, 0, 683, 728]
 	Open			on
 	PortBlocksUseCompactNotation off
 	ModelBrowserVisibility	off
@@ -2102,36 +2102,36 @@ Model {
     Block {
       BlockType		      Constant
       Name		      "Nº Puntos"
-      SID		      "39"
-      Position		      [10, 185, 40, 215]
-      ZOrder		      -9
-      Value		      "10"
+      SID		      "82"
+      Position		      [5, 187, 60, 223]
+      ZOrder		      9
+      Value		      "N_puntos"
     }
     Block {
       BlockType		      Constant
       Name		      "Tiempo\ninicio"
-      SID		      "40"
+      SID		      "83"
       Position		      [65, 215, 95, 245]
-      ZOrder		      -10
-      Value		      "0.5"
+      ZOrder		      8
+      Value		      "Tini"
     }
     Block {
       BlockType		      Constant
       Name		      "XYZfin"
-      SID		      "41"
-      Position		      [10, 138, 75, 172]
-      ZOrder		      -11
+      SID		      "84"
+      Position		      [120, 163, 185, 197]
+      ZOrder		      7
       NamePlacement	      "alternate"
-      Value		      "CinematicaDirecta([0.5 0.5 0.5])"
+      Value		      "XYZfin"
     }
     Block {
       BlockType		      Constant
       Name		      "XYZini"
-      SID		      "42"
-      Position		      [30, 93, 95, 127]
-      ZOrder		      -12
+      SID		      "85"
+      Position		      [70, 138, 135, 172]
+      ZOrder		      6
       NamePlacement	      "alternate"
-      Value		      "CinematicaDirecta([0 0 0])"
+      Value		      "XYZini"
     }
     Block {
       BlockType		      ToWorkspace
@@ -2225,42 +2225,11 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      3
+      ZOrder		      68
       SrcBlock		      "Duración del\nmovimiento"
       SrcPort		      1
       DstBlock		      "GTCL 3 GDL"
       DstPort		      5
-    }
-    Line {
-      ZOrder		      4
-      SrcBlock		      "Tiempo\ninicio"
-      SrcPort		      1
-      DstBlock		      "GTCL 3 GDL"
-      DstPort		      4
-    }
-    Line {
-      ZOrder		      5
-      SrcBlock		      "Nº Puntos"
-      SrcPort		      1
-      Points		      [88, 0; 0, 5]
-      DstBlock		      "GTCL 3 GDL"
-      DstPort		      3
-    }
-    Line {
-      ZOrder		      6
-      SrcBlock		      "XYZfin"
-      SrcPort		      1
-      Points		      [53, 0; 0, 25]
-      DstBlock		      "GTCL 3 GDL"
-      DstPort		      2
-    }
-    Line {
-      ZOrder		      7
-      SrcBlock		      "XYZini"
-      SrcPort		      1
-      Points		      [90, 0; 0, 45]
-      DstBlock		      "GTCL 3 GDL"
-      DstPort		      1
     }
     Line {
       ZOrder		      13
@@ -2335,6 +2304,34 @@ Model {
       Points		      [15, 0; 0, -25]
       DstBlock		      "GTCL 3 GDL"
       DstPort		      6
+    }
+    Line {
+      ZOrder		      70
+      SrcBlock		      "Nº Puntos"
+      SrcPort		      1
+      DstBlock		      "GTCL 3 GDL"
+      DstPort		      3
+    }
+    Line {
+      ZOrder		      69
+      SrcBlock		      "Tiempo\ninicio"
+      SrcPort		      1
+      DstBlock		      "GTCL 3 GDL"
+      DstPort		      4
+    }
+    Line {
+      ZOrder		      71
+      SrcBlock		      "XYZfin"
+      SrcPort		      1
+      DstBlock		      "GTCL 3 GDL"
+      DstPort		      2
+    }
+    Line {
+      ZOrder		      72
+      SrcBlock		      "XYZini"
+      SrcPort		      1
+      DstBlock		      "GTCL 3 GDL"
+      DstPort		      1
     }
   }
 }

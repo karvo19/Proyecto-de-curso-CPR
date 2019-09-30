@@ -77,7 +77,10 @@ static void mdlInitializeSizes(SimStruct *S)
         /* Return if number of expected != number of actual parameters */
         return;
     }
-
+    
+    
+   
+    
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
 
@@ -182,6 +185,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 //     y[0] = 2*u[0];
 //     y1[0] = *uPtrs1[1];
 //     y1[1]= u[0];
+    
+    
     real_T *yPtrs0 = ssGetOutputPortRealSignal(S,0);
     
     InputRealPtrsType uPtrs0 = ssGetInputPortRealSignalPtrs(S,0);      /* Accede a la entrada 0 vía un puntero */
@@ -191,7 +196,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
     InputRealPtrsType uPtrs4 = ssGetInputPortRealSignalPtrs(S,4);
     
     double t;
-    static double q_tramos[3][50+2];       //N=50  **Reserva estática de memoria. Quizá se pueda pasar N como parámetro (Tm)
+    static double q_tramos[3][50+2];       //N=50  **Reserva estática de memoria.
     static double qd_tramos[3][50+2];
     static double t_tramos[50+2];
     static double a[3][50+1];
@@ -223,12 +228,12 @@ static void mdlOutputs(SimStruct *S, int_T tid)
            XYZ[2]=pendiente[2]*incT*punto + XYZinicio[2];
            
            q_tramos[0][punto]=atan(XYZ[1]/XYZ[0]);
-           q_tramos[2][punto]=atan(sqrt(1-pow((XYZ[0]*XYZ[0]+XYZ[1]*XYZ[1]+(XYZ[2]-L0-L1)*(XYZ[2]-L0-L1)-L2*L2-L3*L3)/(2*L2*L3),2))/(XYZ[0]*XYZ[0]+XYZ[1]*XYZ[1]+(XYZ[2]-L0-L1)*(XYZ[2]-L0-L1)-L2*L2-L3*L3)/(2*L2*L3));
+           q_tramos[2][punto]=atan(sqrt(1-pow((XYZ[0]*XYZ[0]+XYZ[1]*XYZ[1]+(XYZ[2]-L0-L1)*(XYZ[2]-L0-L1)-L2*L2-L3*L3)/(2*L2*L3),2))/((XYZ[0]*XYZ[0]+XYZ[1]*XYZ[1]+(XYZ[2]-L0-L1)*(XYZ[2]-L0-L1)-L2*L2-L3*L3)/(2*L2*L3)));
            q_tramos[1][punto]=atan((XYZ[2]-L0-L1)/sqrt(XYZ[0]*XYZ[0]+XYZ[1]*XYZ[1]))-atan((L3*sin(q_tramos[2][punto]))/(L2+L3*cos(q_tramos[2][punto])));
            
            t_tramos[punto]=inicio+incT*punto;
            
-           printf("%d\t %f\t %f\t %f\t %f\t\n",punto,t_tramos[punto],q_tramos[0][punto],q_tramos[1][punto],q_tramos[2][punto]);
+//            printf("%d\t %f\t %f\t %f\t %f\t\n",punto,t_tramos[punto],q_tramos[0][punto],q_tramos[1][punto],q_tramos[2][punto]);
            
        }
        
