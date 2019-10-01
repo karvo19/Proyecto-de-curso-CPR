@@ -28,7 +28,9 @@
 
 
 #define     q   (yPtrs0)
-
+/* #define     qd  (yPtrs1)
+/* #define     qdd (yPtrs2)
+ 
 /****** Parámetros articulares  ******/
 #define L0	1.00
 #define L1  0.40
@@ -103,7 +105,7 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetInputPortDirectFeedThrough(S, 4, 1);
 
     if (!ssSetNumOutputPorts(S, 1)) return;
-    ssSetOutputPortWidth(S, 0, 3);
+    ssSetOutputPortWidth(S, 0, 6);
    
 
     ssSetNumSampleTimes(S, 1);
@@ -188,6 +190,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
     
     
     real_T *yPtrs0 = ssGetOutputPortRealSignal(S,0);
+    /*real_T *yPtrs1 = ssGetOutputPortRealSignal(S,1);
+    /*real_T *yPtrs2 = ssGetOutputPortRealSignal(S,2);*/
     
     InputRealPtrsType uPtrs0 = ssGetInputPortRealSignalPtrs(S,0);      /* Accede a la entrada 0 vía un puntero */
     InputRealPtrsType uPtrs1 = ssGetInputPortRealSignalPtrs(S,1);      /* Accede a la entrada 1 vía un puntero */
@@ -280,15 +284,18 @@ static void mdlOutputs(SimStruct *S, int_T tid)
        q[0]=q_tramos[0][0];
        q[1]=q_tramos[1][0];
        q[2]=q_tramos[2][0];
-
-       
+       q[3]=qd_tramos[0][0];
+       q[4]=qd_tramos[1][0];
+       q[5]=qd_tramos[2][0];
    }
    
    else if(t>=(inicio+duracion)){
        q[0]=q_tramos[0][(int)N+1];
        q[1]=q_tramos[1][(int)N+1];
        q[2]=q_tramos[2][(int)N+1];
-
+       q[3]=qd_tramos[0][(int)N+1];
+       q[4]=qd_tramos[1][(int)N+1];
+       q[5]=qd_tramos[2][(int)N+1];
    }
    else
    {
@@ -301,7 +308,9 @@ static void mdlOutputs(SimStruct *S, int_T tid)
        q[0]=a[0][tramos] + b[0][tramos]*(t-t_tramos[tramos])+ c[0][tramos]*pow((t-t_tramos[tramos]),2)+ d[0][tramos]*pow((t-t_tramos[tramos]),3);
        q[1]=a[1][tramos] + b[1][tramos]*(t-t_tramos[tramos])+ c[1][tramos]*pow((t-t_tramos[tramos]),2)+ d[1][tramos]*pow((t-t_tramos[tramos]),3);
        q[2]=a[2][tramos] + b[2][tramos]*(t-t_tramos[tramos])+ c[2][tramos]*pow((t-t_tramos[tramos]),2)+ d[2][tramos]*pow((t-t_tramos[tramos]),3);
-               
+       q[3]=b[0][tramos] /*+ 2*c[0][tramos]*(t-t_tramos[tramos])+ 3*d[0][tramos]*pow((t-t_tramos[tramos]),2)*/;
+       q[4]=b[1][tramos] /*+ 2*c[1][tramos]*(t-t_tramos[tramos])+ 3*d[1][tramos]*pow((t-t_tramos[tramos]),2)*/;
+       q[5]=b[2][tramos] /*+ 2*c[2][tramos]*(t-t_tramos[tramos])+ 3*d[2][tramos]*pow((t-t_tramos[tramos]),2)*/;   
    }
      
     
