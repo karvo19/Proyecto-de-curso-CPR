@@ -22,16 +22,14 @@ clear
 
 Tsim = 2;
 XYZini = CinematicaDirecta([0 0 0]);
-XYZfin = CinematicaDirecta([pi 3*pi/4 -pi/5]);
+XYZfin = CinematicaDirecta([1 2 1]);%([pi 3*pi/4 -pi/5]);%([1 1 1]);%
 n = 5;
 t_ini = 0.5;
 duracion = 1;
 
-accesible(XYZini, XYZfin);
-
 sim('GTCL.mdl');
 
-graficas_pruebas;
+%graficas_pruebas;
 graficas_gtcl;
 
 %% 
