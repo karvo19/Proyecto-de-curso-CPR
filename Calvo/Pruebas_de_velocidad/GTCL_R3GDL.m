@@ -28,7 +28,7 @@ persistent t_tramos;
 % set up de las variables y calculos/comprobaciones a realizar unicamente la primera vez
 if t == 0
     tramo = 0;
-%     flag = 2;
+    flag = 2;
     
     % Dimensiones de los eslabones
     L0 = 1.00;
@@ -36,48 +36,43 @@ if t == 0
     L2 = 0.70;
     L3 = 0.50;
     
-%     % Condicion para que la recta esté en el espacio de tarea
-%     if (L2 - L3)^2 <= (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) && (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) <= (L2 + L3)^2
-%         if (L2 - L3)^2 <= (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) && (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) <= (L2 + L3)^2
-%             % si los dos extremos de la recta están en el espacio de trabajo
-%             % comprobamos si tambien lo está la recta que los une
-%             C = [0; 0; L0 + L1];        % Centro de las esferas
-%             u = (XYZfin - XYZinicio)'/norm(XYZfin - XYZinicio); % Vector unitario en direccion de la trayectoria
-%             PiC = C - XYZinicio;    % Vector de XYZinicio a C
-%             Proy = ((u*PiC)/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
-% 
-%             distancia = norm(PiC - Proy'); % Menor distancia de C a la trayectoria
-% 
-%             if distancia >= (L2 - L3)
-%                 % La recta está dentro del espacio de tarea.
-%                 flag = 1;
-%             else
-%                 disp('La trayectoria fijada no es valida. Atraviesa zonas no alcanzables')
-%                 set_param(gcs, 'SimulationCommand', 'stop')
-%             end
-%         else
-%             % Error: recta no valida
-%             disp('La trayectoria fijada no es valida. El punto final no es alcanzable')
-%             set_param(gcs, 'SimulationCommand', 'stop')
-%         end
-%     else
-%         % Error: recta no válida
-%         disp('La trayectoria fijada no es valida. El punto inicial no es alcanzable')
-%         set_param(gcs, 'SimulationCommand', 'stop')
-%     end
+    % Condicion para que la recta esté en el espacio de tarea
+    if (L2 - L3)^2 <= (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) && (XYZinicio(1)^2 + XYZinicio(2)^2 + (XYZinicio(3) - L0 - L1)^2) <= (L2 + L3)^2
+        if (L2 - L3)^2 <= (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) && (XYZfin(1)^2 + XYZfin(2)^2 + (XYZfin(3) - L0 - L1)^2) <= (L2 + L3)^2
+            % si los dos extremos de la recta están en el espacio de trabajo
+            % comprobamos si tambien lo está la recta que los une
+            C = [0; 0; L0 + L1];        % Centro de las esferas
+            u = (XYZfin - XYZinicio)'/norm(XYZfin - XYZinicio); % Vector unitario en direccion de la trayectoria
+            PiC = C - XYZinicio;    % Vector de XYZinicio a C
+            Proy = ((u*PiC)/(u*u'))*u; % Proyeccion del vector PiC en direccion de u
+
+            distancia = norm(PiC - Proy'); % Menor distancia de C a la trayectoria
+
+            if distancia >= (L2 - L3)
+                % La recta está dentro del espacio de tarea.
+                flag = 1;
+            else
+                disp('La trayectoria fijada no es valida. Atraviesa zonas no alcanzables')
+                set_param(gcs, 'SimulationCommand', 'stop')
+            end
+        else
+            % Error: recta no valida
+            disp('La trayectoria fijada no es valida. El punto final no es alcanzable')
+            set_param(gcs, 'SimulationCommand', 'stop')
+        end
+    else
+        % Error: recta no válida
+        disp('La trayectoria fijada no es valida. El punto inicial no es alcanzable')
+        set_param(gcs, 'SimulationCommand', 'stop')
+    end
     
-%     if flag == 1
+    if flag == 1
         % Calculamos los puntos muestreados de la trayectoria en coordenadas articulares
         q = zeros(3, n + 2);
         t_tramos = zeros(1, n + 2);
         pendiente = (XYZfin - XYZinicio)/duracion;
         for punto = 0:(n+1)
-            aux = (pendiente*T*punto + XYZinicio);
-            q1 = atan(aux(2)/aux(1));
-            C3 = (aux(1)^2+aux(2)^2+(aux(3)-L0-L1)^2-L2^2-L3^2)/(2*L2*L3);
-            q3 = atan(sqrt(1-C3^2)/C3);
-            q2 = atan((aux(3)-L0-L1)/sqrt(aux(1)^2+aux(2)^2))-atan((L3*sin(q3))/(L2+L3*cos(q3)));
-            q(:, punto+1) = [q1 q2 q3]';
+            q(:, punto+1) = CinematicaInversa((pendiente*T*punto + XYZinicio));
             % Calculamos los tiempos a los que comienza cada tramo
             t_tramos(punto+1) = inicio + T * punto;
         end
@@ -106,8 +101,8 @@ if t == 0
             d(:, i) = - 2/T^3 * (q(:,i+1) - q(:,i)) + 1/T^2 * (qd(:,i+1) + qd(:,i));
         end
         
-%         flag = 0;
-%     end
+        flag = 0;
+    end
 end
 
 % Calculos a realizar una vez por llamada a la función:
@@ -137,28 +132,3 @@ else
     trayectoria = [q_t; qd_t; qdd_t];
 end
 return
-
-% function q = CinematicaInversa(pos)
-% % Variables articulares
-% L0 = 1.00;
-% L1 = 0.40;
-% L2 = 0.70;
-% L3 = 0.50;
-% 
-% x = pos(1);
-% y = pos(2);
-% z = pos(3);
-% 
-% 
-% q1 = atan(y/x);
-% 
-% % q3=acos((x^2+y^2+(z-L0-L1)^2-L2^2-L3^2)/(2*L2*L3));
-% 
-% C3 = (x^2+y^2+(z-L0-L1)^2-L2^2-L3^2)/(2*L2*L3);
-% 
-% q3 = atan(sqrt(1-C3^2)/C3);
-% 
-% q2 = atan((z-L0-L1)/sqrt(x^2+y^2))-atan((L3*sin(q3))/(L2+L3*cos(q3)));
-% 
-% q = [q1 q2 q3]';
-% return
