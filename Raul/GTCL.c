@@ -244,7 +244,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
        // ** Añadir criterio heurístico **
     for(i=0;i<3;i++){
         for(j=0;j<=N;j++){
-            if ((j==0)|(j==N)){
+            if ((j==0)|(j==N+1)){
                 qd_tramos[i][j]=0;
             }
             else if (((q_tramos[i][j]-q_tramos[i][j-1])>0 & (q_tramos[i][j+1]-q_tramos[i][j])>0) | ((q_tramos[i][j]-q_tramos[i][j-1])<0 & (q_tramos[i][j+1]-q_tramos[i][j])<0))
