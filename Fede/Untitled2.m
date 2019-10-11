@@ -1,6 +1,6 @@
 %%estimacion parametros%%
 k1=0.5;k2=0.4;k3=0.35;
-Thet=[I11x, I11y, I11z, I22x, I22y, I33z, I33x, I33y, I33z, Jm1, Jm2, Jm3, Bm1, Bm2, Bm3, m1*s11y^2, m2*s22x^2, m3*s33x^2, m1*s11y, m2*s22x, m3*s33x, m1, m2, m3,]; 
+Thet=[I11x, I11y, I11z, I22x, I22y, I22z, I33x, I33y, I33z, Jm1, Jm2, Jm3, Bm1, Bm2, Bm3, m1*s11y^2, m2*s22x^2, m3*s33x^2, m1*s11y, m2*s22x, m3*s33x, m1, m2, m3]; 
 %T1
 %inercias
 Mat101=diff(T1,I11x);
@@ -14,18 +14,18 @@ Mat108=diff(T1,I33y);
 Mat109=diff(T1,I33z);
 
 %JyB
-Mat110=(R1^2)*qdd1;
-Mat111=0;
-Mat112=0;
+Mat110=diff(T1,Jm1);
+Mat111=diff(T1,Jm2);
+Mat112=diff(T1,Jm3);
 
-Mat113=(R1^2)*qd1;
-Mat114=0;
-Mat115=0;
+Mat113=diff(T1,Bm1);
+Mat114=diff(T1,Bm2);
+Mat115=diff(T1,Bm3);
 
 %masas %diff(T1,m1) y seleccionar terminos con s11y^2...
-Mat116=0;
-Mat117=qdd1/2+(qdd1*cos(2*q2))/2 - qd1*qd2*sin(2*q2);
-Mat118=qdd1/2 + (qdd1*cos(2*q2 + 2*q3))/2 - qd1*qd2*sin(2*q2 + 2*q3) - qd1*qd3*sin(2*q2 + 2*q3);
+Mat116=diff(diff(T1,s11y,2),m1);
+Mat117=diff(diff(T1,s22x,2),m2);
+Mat118=diff(diff(T1,s33x,2),m3);
 
 Maux=simplify(T1-Mat116*m1*s11y^2);
 Mat119=diff(diff(Maux,s11y),m1);
@@ -54,18 +54,18 @@ Mat208=diff(T2,I33y);
 Mat209=diff(T2,I33z);
 
 %JyB
-Mat210=(R2^2)*qdd2;
-Mat211=0;
-Mat212=0;
+Mat210=diff(T2,Jm1);
+Mat211=diff(T2,Jm2);
+Mat212=diff(T2,Jm3);
 
-Mat213=(R2^2)*qd2;
-Mat214=0;
-Mat215=0;
+Mat213=diff(T2,Bm1);
+Mat214=diff(T2,Bm2);
+Mat215=diff(T2,Bm3);
 
 %masas
-Mat216=0;
-Mat217=qdd2+(qd1^2*sin(2*q2))/2;
-Mat218=qdd2 + qdd3 + (qd1^2*sin(2*q2 + 2*q3))/2;
+Mat216=diff(diff(T2,s11y,2),m1);
+Mat217=diff(diff(T2,s22x,2),m2);
+Mat218=diff(diff(T2,s33x,2),m3);
 
 Maux=simplify(T2-Mat216*m1*s11y^2);
 Mat219=diff(diff(Maux,s11y),m1);
@@ -94,18 +94,18 @@ Mat308=diff(T3,I33y);
 Mat309=diff(T3,I33z);
 
 %JyB
-Mat310=(R3^2)*qdd3;
-Mat311=0;
-Mat312=0;
+Mat310=diff(T3,Jm1);
+Mat311=diff(T3,Jm2);
+Mat312=diff(T3,Jm3);
 
-Mat313=(R3^2)*qd3;
-Mat314=0;
-Mat315=0;
+Mat313=diff(T3,Bm1);
+Mat314=diff(T3,Bm2);
+Mat315=diff(T3,Bm3);
 
 %masas
-Mat316=0;
-Mat317=0;
-Mat318=0;
+Mat316=diff(diff(T3,s11y,2),m1);
+Mat317=diff(diff(T3,s22x,2),m2);
+Mat318=diff(diff(T3,s33x,2),m3);
 
 Maux=simplify(T3-Mat316*m1*s11y^2);
 Mat319=diff(diff(Maux,s11y),m1);

@@ -2,7 +2,7 @@
 % de un robot de 3 DGL
 % M.G. Ortega (2017)
 
-syms T1 T2 T3 q1 qd1 qdd1 q2 qd2 qdd2 q3 qd3 qdd3 g m1 m2 m3 s11x s11y s11z s22x s22y s22z s33x s33y s33z I11x I11y II11z I22x I22y I22z I33x I33y I33z Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 real  
+syms T1 T2 T3 q1 qd1 qdd1 q2 qd2 qdd2 q3 qd3 qdd3 g m1 m2 m3 s11x s11y s11z s22x s22y s22z s33x s33y s33z I11x I11y I11z I22x I22y I22z I33x I33y I33z Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 real  
 PI = sym('pi');
 s11=[0, s11y, 0]';
 s22=[s22x, 0, 0]';
@@ -199,85 +199,90 @@ theta4= 0; d4=0 ; a4=0 ; alpha4=0 ; %%==0 significa que el marco donde aplicamos
 
 % Robot ??? (descomentar los que procedan)
   %T1=simplify(F1z);
-  T1=simplify(N1z)
+  T1=simplify(N1z);
   % T2=F2z;
-  T2=simplify(N2z)
+  T2=simplify(N2z);
   % T3=F3z;
-  T3=simplify(N3z)
+  T3=simplify(N3z);
 
   
-%   %%%HASTA AQUI EL CODIGO QUE DAN EN EXAMEN
-%   
-% % traslacion apuntes
-% M11 = diff(T1,qdd1);
-% Taux= simplify(T1-M11*qdd1);
-% M12 = diff(Taux,qdd2);
-% Taux= simplify(Taux-M12*qdd2);
-% M13 = diff(Taux,qdd3);  
-% Taux= simplify(Taux-M13*qdd3);
-% G1=diff(Taux,g)*g;
-% Taux=simplify(Taux-G1);
-% V1=Taux;
-% 
-% M21 = diff(T2,qdd1);
-% Taux= simplify(T2-M21*qdd1);
-% M22 = diff(Taux,qdd2);
-% Taux= simplify(Taux-M22*qdd2);
-% M23 = diff(Taux,qdd3);
-% Taux= simplify(Taux-M23*qdd3);
-% G2=diff(Taux,g)*g;
-% Taux=simplify(Taux-G2);
-% V2=Taux;
-% 
-% M31 = diff(T3,qdd1);
-% Taux= simplify(T3-M13*qdd1);
-% M32 = diff(Taux,qdd2);
-% Taux= simplify(Taux-M32*qdd2);
-% M33 = diff(Taux,qdd3);
-% Taux= simplify(Taux-M33*qdd3);
-% G3=diff(Taux,g)*g;
-% Taux=simplify(Taux-G1);
-% V3=Taux;
-% 
-% %simplificar elementos
-% M11=simplify(M11);
-% M12=simplify(M12);
-% M13=simplify(M13);
-% M21=simplify(M21);
-% M22=simplify(M22);
-% M23=simplify(M23);
-% M31=simplify(M31);
-% M32=simplify(M32);
-% M33=simplify(M33);
-% 
-% G1=simplify(G1);
-% G2=simplify(G2);
-% G3=simplify(G3);
-% 
-% V1=simplify(V1);
-% V2=simplify(V2);
-% V3=simplify(V3);
-% 
-% 
-% M=[M11 M12 M13;M21 M22 M23; M31 M32 M33];
-% V=[V1;V2;V3];
-% G=[G1;G2;G3];
-% 
-% 
-% % vpa(M,5) %%evalua matriz (5 decimales)
-% 
-% 
-% %%reductora
-% R=diag([R1 R2 R3]);
-% Jm=diag([Jm1 Jm2 Jm3]);
-% Bm=diag([Bm1 Bm2 Bm3]);
-% 
-% %%matrices ampliadas
-% Ma=M+R*R*Jm
-% Va=V+R*R*Bm*[qd1;qd2;qd3]
-% Ga=G
-% 
-% 
-% %%continuar en RTB_robot_3GDL.m
-% 
+  %%%HASTA AQUI EL CODIGO QUE DAN EN EXAMEN
+  
+% traslacion apuntes
+M11 = diff(T1,qdd1);
+Taux= simplify(T1-M11*qdd1);
+M12 = diff(Taux,qdd2);
+Taux= simplify(Taux-M12*qdd2);
+M13 = diff(Taux,qdd3);  
+Taux= simplify(Taux-M13*qdd3);
+G1=diff(Taux,g)*g;
+Taux=simplify(Taux-G1);
+V1=Taux;
+
+M21 = diff(T2,qdd1);
+Taux= simplify(T2-M21*qdd1);
+M22 = diff(Taux,qdd2);
+Taux= simplify(Taux-M22*qdd2);
+M23 = diff(Taux,qdd3);
+Taux= simplify(Taux-M23*qdd3);
+G2=diff(Taux,g)*g;
+Taux=simplify(Taux-G2);
+V2=Taux;
+
+M31 = diff(T3,qdd1);
+Taux= simplify(T3-M13*qdd1);
+M32 = diff(Taux,qdd2);
+Taux= simplify(Taux-M32*qdd2);
+M33 = diff(Taux,qdd3);
+Taux= simplify(Taux-M33*qdd3);
+G3=diff(Taux,g)*g;
+Taux=simplify(Taux-G1);
+V3=Taux;
+
+%simplificar elementos
+M11=simplify(M11);
+M12=simplify(M12);
+M13=simplify(M13);
+M21=simplify(M21);
+M22=simplify(M22);
+M23=simplify(M23);
+M31=simplify(M31);
+M32=simplify(M32);
+M33=simplify(M33);
+
+G1=simplify(G1);
+G2=simplify(G2);
+G3=simplify(G3);
+
+V1=simplify(V1);
+V2=simplify(V2);
+V3=simplify(V3);
+
+
+M=[M11 M12 M13;M21 M22 M23; M31 M32 M33];
+V=[V1;V2;V3];
+G=[G1;G2;G3];
+
+
+% vpa(M,5) %%evalua matriz (5 decimales)
+
+
+%%reductora
+R=diag([R1 R2 R3]);
+Jm=diag([Jm1 Jm2 Jm3]);
+Bm=diag([Bm1 Bm2 Bm3]);
+
+%%matrices ampliadas
+Ma=M+R*R*Jm;
+Va=V+R*R*Bm*[qd1;qd2;qd3];
+Ga=G;
+
+T_comp = ( Ma * [qdd1 qdd2 qdd3]' + Va + Ga);
+T1=(T_comp(1));
+T2=(T_comp(2));
+T3=(T_comp(3));
+
+
+%%continuar en RTB_robot_3GDL.m
+
 
