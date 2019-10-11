@@ -1,7 +1,10 @@
+%% Newton-Euler
+clear all;
+
 % Variables simbolicas necesarias
 syms T1 T2 T3 q1 qd1 qdd1 q2 qd2 qdd2 q3 qd3 qdd3 g real
 syms m1 m2 m3 l1 l2 l3 Ixx1 Ixx2 Ixx3 Iyy1 Iyy2 Iyy3 Izz1 Izz2 Izz3 real
-syms Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 R1 R2 R3 K1 K2 K3 real
+syms Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 real
 PI = sym('pi');
 
 % DATOS CINEMÁTICOS DEL BRAZO DEL ROBOT
@@ -48,7 +51,9 @@ PI = sym('pi');
 % Coeficientes de fricción viscosa
   Bm1; Bm2; Bm3; % N.m / (rad/s)
 % Factores de reducción
-  R1; R2; R3;
+  R1 = 50; R2 = 30; R3 = 15;
+% Constantes de par de los motores
+  Kt1 = 0.5; Kt2 = 0.4; Kt3 = 0.35;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ALGORÍTMO DE NEWTON-EULER
@@ -197,8 +202,7 @@ PI = sym('pi');
   % T3=F3z;
   T3=N3z;
 
-
-% Obtencion de las matrices MVG
+%% Obtencion de las matrices MVG
 M11=diff(T1,qdd1);
 M12=diff(T1,qdd2);
 M13=diff(T1,qdd3);
@@ -243,25 +247,43 @@ Ma=simplify(Ma);
 Va=simplify(Va);
 Ga=simplify(Ga);
 
-% Modelo: K * Im = Ma * qdd + Va + G
-% Tau = [K1 K2 K3] * [R1 ; R2; R3] * Im
-Tau = Ma * [qdd1; qdd2; qdd3] + Va + G;
+
+%% Reordenacion de las ecuaciones en forma de Kt_Im_R = gamma * thita
+% Modelo: K * Im * R = Ma * qdd + Va + G
+% Kt_Im_R = [K1 K2 K3] * [R1 ; R2; R3] * Im
+Kt_Im_R = Ma * [qdd1; qdd2; qdd3] + Va + G;
 
 thita = [m1 m1*l1 m1*l1^2 Ixx1 Iyy1 Izz1 Jm1 Bm1 m2 m2*l2 m2*l2^2 Ixx2 Iyy2 Izz2 Jm2 Bm2 m3 m3*l3 m3*l3^2 Ixx3 Iyy3 Izz3 Jm3 Bm3]';
-fi = sym(zeros(3, length(thita)));
+gamma = sym(zeros(3, length(thita)));
 
-fi(:,3) = diff((diff(Tau, l1, 2)/2),m1);
-fi(:,2) = diff((diff((Tau - fi(:,3)*m1*l1^2),l1)),m1);
-fi(:,1) = diff((Tau - fi(:,2)*m1*l1 - fi(:,3)*m1*l1^2),m1);
+gamma(:,3) = diff((diff(Kt_Im_R, l1, 2)/2),m1);
+gamma(:,2) = diff((diff((Kt_Im_R - gamma(:,3)*m1*l1^2),l1)),m1);
+gamma(:,1) = diff((Kt_Im_R - gamma(:,2)*m1*l1 - gamma(:,3)*m1*l1^2),m1);
 
-fi(:,11) = diff((diff(Tau, l2, 2)/2),m2);
-fi(:,10) = diff((diff((Tau - fi(:,11)*m2*l2^2),l2)),m2);
-fi(:,9) = diff((Tau - fi(:,10)*m2*l2 - fi(:,11)*m2*l2^2),m2);
+gamma(:,11) = diff((diff(Kt_Im_R, l2, 2)/2),m2);
+gamma(:,10) = diff((diff((Kt_Im_R - gamma(:,11)*m2*l2^2),l2)),m2);
+gamma(:,9) = diff((Kt_Im_R - gamma(:,10)*m2*l2 - gamma(:,11)*m2*l2^2),m2);
 
-fi(:,19) = diff((diff(Tau, l3, 2)/2),m3);
-fi(:,18) = diff((diff((Tau - fi(:,19)*m3*l3^2),l3)),m3);
-fi(:,17) = diff((Tau - fi(:,18)*m3*l3 - fi(:,19)*m3*l3^2),m3);
+gamma(:,19) = diff((diff(Kt_Im_R, l3, 2)/2),m3);
+gamma(:,18) = diff((diff((Kt_Im_R - gamma(:,19)*m3*l3^2),l3)),m3);
+gamma(:,17) = diff((Kt_Im_R - gamma(:,18)*m3*l3 - gamma(:,19)*m3*l3^2),m3);
 
 for j = [4:8 12:16 20:24]
-    fi(:,j) = diff(Tau, thita(j));
+    gamma(:,j) = diff(Kt_Im_R, thita(j));
 end
+
+%% Reduccion de la matriz gamma con métodos numericos
+gamma_numerica = zeros(length(thita),length(thita));
+g = 9.8;
+for i = 1:(length(thita)/3)
+    q1 = rand; qd1 = rand; qdd1 = rand;
+    q2 = rand; qd2 = rand; qdd2 = rand;
+    q3 = rand; qd3 = rand; qdd3 = rand;
+    gammma_numerica() = eval(gamma);
+end
+
+%% Gamma
+size_gamma = size(gamma);
+gamma_extendida = [gamma; zeros(length(thita)-size_gamma(1),length(thita))];
+
+[AA, columnas_independientes] = rref(gamma_extendida)
