@@ -272,18 +272,44 @@ for j = [4:8 12:16 20:24]
     gamma(:,j) = diff(Kt_Im_R, thita(j));
 end
 
+gamma = simplify(gamma);
+
 %% Reduccion de la matriz gamma con métodos numericos
 gamma_numerica = zeros(length(thita),length(thita));
 g = 9.8;
-for i = 1:(length(thita)/3)
-    q1 = rand; qd1 = rand; qdd1 = rand;
-    q2 = rand; qd2 = rand; qdd2 = rand;
-    q3 = rand; qd3 = rand; qdd3 = rand;
-    gammma_numerica() = eval(gamma);
+for j = 1:10
+    for i = 1:3:(length(thita))
+        q1 = rand; qd1 = rand; qdd1 = rand;
+        q2 = rand; qd2 = rand; qdd2 = rand;
+        q3 = rand; qd3 = rand; qdd3 = rand;
+
+        gamma_numerica(i:i+2,:) = eval(gamma);
+    end
+    [Coeficientes, Columnas_Independientes] = rref(gamma_numerica);
+    Columnas_Independientes
 end
+% Columnas_Independientes -> 5 8 9 10 12 16 17 18 20 23 24
 
-%% Gamma
-size_gamma = size(gamma);
-gamma_extendida = [gamma; zeros(length(thita)-size_gamma(1),length(thita))];
+%% Gamma y Thita reducidas
 
-[AA, columnas_independientes] = rref(gamma_extendida)
+% Columnas_Independientes -> 5 8 9 10 12 16 17 18 20 23 24
+
+%           1     2       3    4    5    6   7   8  9    10      11   12   13   14  15  16 17    18      19   20   21   22  23  24 
+% thita = [m1 m1*l1 m1*l1^2 Ixx1 Iyy1 Izz1 Jm1 Bm1 m2 m2*l2 m2*l2^2 Ixx2 Iyy2 Izz2 Jm2 Bm2 m3 m3*l3 m3*l3^2 Ixx3 Iyy3 Izz3 Jm3 Bm3]';
+
+gamma_reducida = [qdd1, 2500*qd1, (2*qdd1)/25 + (2*qdd1*cos(2*q2))/25 - (4*qd1*qd2*sin(2*q2))/25, (4*qd1*qd2*sin(2*q2))/5 - (2*qdd1*cos(2*q2))/5 - (2*qdd1)/5, qd1*qd2*sin(2*q2) - qdd1*(cos(2*q2)/2 - 1/2),       0, (13*qdd1)/50 + (2*qdd1*cos(2*q2))/25 + (9*qdd1*cos(2*q2 + 2*q3))/50 + (6*qdd1*cos(q3))/25 + (6*qdd1*cos(2*q2 + q3))/25 - (6*qd1*qd3*sin(q3))/25 - (12*qd1*qd2*sin(2*q2 + q3))/25 - (6*qd1*qd3*sin(2*q2 + q3))/25 - (4*qd1*qd2*sin(2*q2))/25 - (9*qd1*qd2*sin(2*q2 + 2*q3))/25 - (9*qd1*qd3*sin(2*q2 + 2*q3))/25, (2*qd1*qd3*sin(q3))/5 - (3*qdd1*cos(2*q2 + 2*q3))/5 - (2*qdd1*cos(q3))/5 - (2*qdd1*cos(2*q2 + q3))/5 - (3*qdd1)/5 + (4*qd1*qd2*sin(2*q2 + q3))/5 + (2*qd1*qd3*sin(2*q2 + q3))/5 + (6*qd1*qd2*sin(2*q2 + 2*q3))/5 + (6*qd1*qd3*sin(2*q2 + 2*q3))/5, (qd1*(25*qd2*sin(2*q2 + 2*q3) + 25*qd3*sin(2*q2 + 2*q3)))/25 - qdd1*(cos(2*q2 + 2*q3)/2 - 1/2),        0,       0;
+                     0,        0,         (2*sin(2*q2)*qd1^2)/25 + (4*qdd2)/25 + (2*g*cos(q2))/5,            - (4*qdd2)/5 - (2*qd1^2*sin(2*q2))/5 - g*cos(q2),                         -(qd1^2*sin(2*q2))/2, 900*qd2,                                                        (13*qdd2)/25 + (9*qdd3)/25 - (6*qd3^2*sin(q3))/25 + (6*qd1^2*sin(2*q2 + q3))/25 + (3*g*cos(q2 + q3))/5 + (2*qd1^2*sin(2*q2))/25 + (2*g*cos(q2))/5 + (9*qd1^2*sin(2*q2 + 2*q3))/50 + (12*qdd2*cos(q3))/25 + (6*qdd3*cos(q3))/25 - (12*qd2*qd3*sin(q3))/25,                                                      (2*sin(q3)*qd3^2)/5 + (4*qd2*sin(q3)*qd3)/5 - (6*qdd2)/5 - (6*qdd3)/5 - (2*qd1^2*sin(2*q2 + q3))/5 - g*cos(q2 + q3) - (3*qd1^2*sin(2*q2 + 2*q3))/5 - (4*qdd2*cos(q3))/5 - (2*qdd3*cos(q3))/5,                                                                    -(qd1^2*sin(2*q2 + 2*q3))/2,        0,       0;
+                     0,        0,                                                              0,                                                           0,                                            0,       0,                                                                                                                              (9*qdd2)/25 + (9*qdd3)/25 + (3*qd1^2*sin(q3))/25 + (6*qd2^2*sin(q3))/25 + (3*qd1^2*sin(2*q2 + q3))/25 + (3*g*cos(q2 + q3))/5 + (9*qd1^2*sin(2*q2 + 2*q3))/50 + (6*qdd2*cos(q3))/25,                                                                               - (6*qdd2)/5 - (6*qdd3)/5 - (qd1^2*sin(q3))/5 - (2*qd2^2*sin(q3))/5 - (qd1^2*sin(2*q2 + q3))/5 - g*cos(q2 + q3) - (3*qd1^2*sin(2*q2 + 2*q3))/5 - (2*qdd2*cos(q3))/5,                                                                    -(qd1^2*sin(2*q2 + 2*q3))/2, 225*qdd3, 225*qd3];
+thita_reducida = [    Iyy1 + 2500*Jm1 + Iyy2 + Iyy3 - Izz2 - Izz3 - 900*Jm2
+                       Bm1
+                        m2 - 25/4*m2*l2^2 - 25/4*Izz2 - 900*25/4*Jm2 - 25/9*Izz3 - 25/9*m3*l3^2 + 50/9*Izz3 + 50/9*m3*l3^2
+                     m2*l2 -  5/2*m2*l2^2 -  5/2*Izz2 -  900*5/2*Jm2 - 10/9*Izz3 - 10/9*m3*l3^2 + 10/9*Izz3 + 10/9*m3*l3^2
+                      Ixx2 -         Iyy2 +      Izz2 +      900*Jm2 - 4/9*Izz3 - 4/9*m3*l3^2   +  4/9*Izz3 +  4/9*m3*l3^2
+                       Bm2
+                        m3 - 25/9*m3*l3^2 - 25/9*Izz3
+                     m3*l3 -  5/3*m3*l3^2 -  5/3*Izz3
+                      Ixx3 -         Iyy3 +      Izz3
+                       Jm3
+                       Bm3];
+clc
+simplify(gamma_reducida*thita_reducida - Kt_Im_R)
