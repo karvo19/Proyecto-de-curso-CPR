@@ -413,19 +413,113 @@ for i = 1:3
     V(i) = Kt_Im_R(i) - M(i,:)*qdd - G(i);
 end
 
-M = simplify(M);
-V = simplify(V);
-G = simplify(G);
+% R, Jm y Bm ya estan inluidas en M V y G
+Ma = simplify(M);
+Va = simplify(V);
+Ga = simplify(G);
 
-R  = [ R1, 0, 0; 0,  R2, 0; 0, 0,  R3];
-Jm = [Jm1, 0, 0; 0, Jm2, 0; 0, 0, Jm3];
-Bm = [Bm1, 0, 0; 0, Bm2, 0; 0, 0, Bm3];
+%% SIMULINK: Excitacion del robot para estimar parámetros
+close all;
+clc;
 
-Ma = M + Jm*R*R;
-Va = V + Bm*R*R*qd;
-Ga = G;
+% Tiempos de simulacion
+Tsim = 20;
+Ts = 0.001;
 
-% Matrices ampliadas
-Ma = simplify(Ma);
-Va = simplify(Va);
-Ga = simplify(Ga);
+% Variables para las excitaciones
+Im_cc = [0  1     0.5];
+
+A_a = [0.3  0.2     0.3];
+W_a = [  1  2     3];
+
+A_b = [0.5  0.25     0.2];
+W_b = [  5    5     8];
+
+tau = Tsim/4;
+
+% Simulacion
+sim('sk_R3GDL.mdl');
+
+% % Graficas:
+% figure(1);
+% title('Intensidades de los motores');
+% for i = 1:3
+%     subplot(3,1,i);
+%     plot(t,Im(:,i),ts,Ims(:,i));grid;
+%     ylabel('Intensidad (A)');
+%     legend(insertAfter('Im_', '_', int2str(i)), ...
+%         insertAfter('Ims_', '_', int2str(i)));
+% end
+% xlabel('timepo (s)');
+% 
+% figure(2);
+% title('Posiciones Articulares');
+% for i = 1:3
+%     subplot(3,1,i);
+%     plot(t,q(:,i),ts,qs(:,i),t,qm(:,i),ts,qms(:,i));grid;
+%     ylabel('Posicion (rad)');
+%     legend(insertAfter('q_', '_', int2str(i)), ...
+%         insertAfter('qs_', '_', int2str(i)), ...
+%         insertAfter('qm_', '_', int2str(i)), ...
+%         insertAfter('qms_', '_', int2str(i)));
+% end
+% xlabel('timepo (s)');
+% 
+% figure(3);
+% title('Velocidades Articulares');
+% for i = 1:3
+%     subplot(3,1,i);
+%     plot(t,qd(:,i),ts,qds(:,i),t,qdm(:,i),ts,qdms(:,i));grid;
+%     ylabel('Velocidad (rad/s)');
+%     legend(insertAfter('qd_', '_', int2str(i)), ...
+%         insertAfter('qds_', '_', int2str(i)), ...
+%         insertAfter('qdm_', '_', int2str(i)), ...
+%         insertAfter('qdms_', '_', int2str(i)));
+% end
+% xlabel('timepo (s)');
+% 
+% figure(4);
+% title('Aceleraciones Articulares');
+% for i = 1:3
+%     subplot(3,1,i);
+%     plot(t,qdd(:,i),ts,qdds(:,i));grid;
+%     ylabel('Aceleracion (rad/s^2)');
+%     legend(insertAfter('qdd_', '_', int2str(i)), ...
+%         insertAfter('qdds_', '_', int2str(i)));
+% end
+% xlabel('timepo (s)');
+
+% Recoleccion de datos
+
+g = 9.8;
+Kt = [1/Kt1 0 0; 0 1/Kt2 0; 0 0 1/Kt3];
+R = [1/R1 0 0; 0 1/R2 0; 0 0 1/R3];
+gamma_evaluada = [];
+Kt_Im_R_evaluada = [];
+Im_evaluada = [];
+gamma_evaluada_Kt_R = [];
+for i = 1500:10:length(qs)
+    q1 = qs(i,1);        q2 = qs(i,2);        q3 = qs(i,3);
+    qd1 = qds(i,1);      qd2 = qds(i,2);      qd3 = qds(i,3);
+    qdd1 = qdds(i,1);    qdd2 = qdds(i,2);    qdd3 = qdds(i,3);
+    
+    aux = eval(gamma_reducida);
+    gamma_evaluada = [gamma_evaluada; aux];
+    
+    Kt_Im_R_evaluada = [Kt_Im_R_evaluada; [Kt1*Im(i,1)*R1; Kt2*Im(i,2)*R2; Kt3*Im(i,3)*R3]];
+    
+    Im_evaluada = [Im_evaluada; Im(i,:)'];
+    gamma_evaluada_Kt_R = [gamma_evaluada_Kt_R; Kt*R*aux];
+end
+
+[thita_hat, std_thita_hat] = lscov(gamma_evaluada, Kt_Im_R_evaluada);
+thita_hat'
+std_thita_hat'
+100*std_thita_hat'./abs(thita_hat)'
+
+disp('')
+disp('')
+[thita_hat, std_thita_hat] = lscov(gamma_evaluada_Kt_R, Im_evaluada);
+thita_hat'
+std_thita_hat'
+100*std_thita_hat'./abs(thita_hat)'
