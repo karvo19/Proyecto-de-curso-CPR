@@ -2,7 +2,7 @@
 % de un robot de 3 DGL
 % M.G. Ortega (2017)
 clear
-clc
+% clc
 
 syms L1 L2 L3 l0 l1 l2 l3 T1 T2 T3 q1 qd1 qdd1 q2 qd2 qdd2 q3 qd3 qdd3 g real 
 syms m1 Ixx1 Iyy1 Izz1 sy1 real
@@ -504,6 +504,96 @@ PHI=simplify([
 theta=[Ixx1 Ixx2 Ixx3 Iyy1 Iyy2 Iyy3 Izz1 Izz2 Izz3 Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 m1*L1^2 m2*L2^2 m3*L3^2 m1*L1 m2*L2 m3*L3 m1 m2 m3]';
 
 simplify(PHI*theta-[Ta1 Ta2 Ta3]')
+
+% para comparar
+phi1=[PHI(:,22) PHI(:,19) PHI(:,16) PHI(:,1) PHI(:,4) PHI(:,7) PHI(:,10) PHI(:,13) PHI(:,23) PHI(:,20) PHI(:,17) PHI(:,2) PHI(:,5) PHI(:,8) PHI(:,11) PHI(:,14) PHI(:,24) PHI(:,21) PHI(:,18) PHI(:,3) PHI(:,6) PHI(:,9) PHI(:,12) PHI(:,15)];
+
+        
+%% Simbólico - Base reducida
+
+t=[Ixx1 Ixx2 Ixx3 Iyy1 Iyy2 Iyy3 Izz1 Izz2 Izz3 Jm1 Jm2 Jm3 Bm1 Bm2 Bm3 m1*L1^2 m2*L2^2 m3*L3^2 m1*L1 m2*L2 m3*L3 m1 m2 m3]';
+t_red=[
+    t(2)-t(5)-t(17)-l2^2*t(24)
+    t(3)-t(6)-t(18)
+    t(4)+t(5)+t(6)+R1^2*t(10)+t(17)+t(18)+l2^2*t(24)
+    t(8)+R2^2*t(11)+t(17)+l2^2*t(24)
+    t(9)+t(18)
+    t(12)
+    t(13)
+    t(14)
+    t(15)
+    t(20)+l2*t(24)
+    t(21)]
+
+phi_red=[PHI(:,2) PHI(:,3) PHI(:,4) PHI(:,8) PHI(:,9) PHI(:,12) PHI(:,13) PHI(:,14) PHI(:,15) PHI(:,20) PHI(:,21)]
+
+Tau=simplify(phi_red*t_red);
+T1=Tau(1);
+T2=Tau(2);
+T3=Tau(3);
+
+  % Reescribir en forma matricial
+  M11=diff(T1,qdd1);
+  Taux=simplify(T1-M11*qdd1);
+  M12=diff(Taux,qdd2);
+  Taux=simplify(Taux-M12*qdd2);
+  M13=diff(Taux,qdd3);
+  Taux=simplify(Taux-M13*qdd3); 
+  
+  G1=diff(Taux,g)*g;
+  Taux=simplify(Taux-G1);
+  V1=Taux;
+  
+  
+  M21=diff(T2,qdd1);
+  Taux=simplify(T2-M21*qdd1);
+  M22=diff(Taux,qdd2);
+  Taux=simplify(Taux-M22*qdd2);
+  M23=diff(Taux,qdd3);
+  Taux=simplify(Taux-M23*qdd3); 
+  
+  G2=diff(Taux,g)*g;
+  Taux=simplify(Taux-G2);
+  V2=Taux;
+
+  
+  M31=diff(T3,qdd1);
+  Taux=simplify(T3-M31*qdd1);
+  M32=diff(Taux,qdd2);
+  Taux=simplify(Taux-M32*qdd2);
+  M33=diff(Taux,qdd3);
+  Taux=simplify(Taux-M33*qdd3); 
+  
+  G3=diff(Taux,g)*g;
+  Taux=simplify(Taux-G3);
+  V3=Taux;
+  
+  
+  M=[M11 M12 M13;M21 M22 M23;M31 M32 M33];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
