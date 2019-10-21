@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.46"
+    ComputedModelVersion    "1.48"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -71,7 +71,7 @@ Model {
 	LoadSaveID		"0"
 	Extents			[1562.0, 735.0]
 	ZoomFactor		[1.25]
-	Offset			[-318.032128835339, -90.306338058193035]
+	Offset			[-323.46212658943614, -90.306338058193035]
       }
       Object {
 	$PropName		"DockComponentsInfo"
@@ -105,9 +105,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Alvaro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Oct 18 13:06:15 2019"
-  RTWModifiedTimeStamp	  493300026
-  ModelVersionFormat	  "1.%<AutoIncrement:46>"
+  LastModifiedDate	  "Sun Oct 20 17:13:58 2019"
+  RTWModifiedTimeStamp	  493491317
+  ModelVersionFormat	  "1.%<AutoIncrement:48>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
