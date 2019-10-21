@@ -1,9 +1,24 @@
 % Minimos cuadrados
-clear all
-clc
-format short
+clear a*
+clear d*
+clear f*
+clear g*
+clear i*
+clear I*
+clear K*
+clear l*
+clear n*
+clear q*
+clear R*
+clear s*
+clear S*
+clear t*
+clear T*
+clear w*
 
-Tsim=30;
+
+% clc
+format short
 
 l0 = 1.00;
 l1 = 0.40;
@@ -64,7 +79,7 @@ qddf=filter(num,den,qdd_est);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-run graficas;
+% run graficas;
 
 % Recopilar datos
 q1=[];
@@ -84,7 +99,7 @@ gamma=[];
 
 
 ini=1000;
-fin=15000;
+fin=25000;
 for i=ini:10:fin
     
 %     q1=[q1;q(i,1)];
@@ -133,8 +148,7 @@ end
 
 [Theta,Sigma]=lscov(gamma,I);
 
-Theta
-dtr=100*Sigma./Theta
+salida = [Theta, 100*Sigma./Theta];
 
 
 
