@@ -16,5 +16,13 @@ Comparacion_Parametros = [...
 ];
 Comparacion_Parametros = [ Comparacion_Parametros, salida]
 %H = [H, salida]
-Hs = [Hs(:,2:4), 100*Sigma./Theta]
+columnas = size(Hs);
+if columnas(2) < 4
+    Hs = [Hs, 100*Sigma./Theta]
+else
+    Hs = [Hs(:,2:4), 100*Sigma./Theta]
+end
+norm(100*Sigma./Theta)
 % Theta
+
+% graficas;

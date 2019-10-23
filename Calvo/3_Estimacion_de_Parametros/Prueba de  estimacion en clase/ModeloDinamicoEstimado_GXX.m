@@ -1,5 +1,4 @@
-%%%%%%%%%%%%%%% Modelo Dinámico %%%%%%%%%%%%%%%
-function [qdd] = ModeloDinamico_R3GDL(in)
+function [qdd] = ModeloDinamicoEstimado_GXX(in)
 
 % Variables de entrada en la funcion:
 q1        = in(1);
@@ -104,3 +103,4 @@ G=[G1 G2 G3]';
 Im=[Im1 Im2 Im3]';
 
 qdd = inv(M)*(Kt*R*Im-V-G);
+  

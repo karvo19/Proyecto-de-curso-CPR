@@ -2,14 +2,27 @@
 Im_cc=[0  0.4  0.15];
 
 % Senos que se amortiguan lentamente (tendran frec baja)
-A_a=[2    1.5  0.5];
+A_a=[0.7    1.3  0.5];
 W_a=[0.5  0.5  0.5]*2*pi;
-tau=8;
+tau=7;
 
 % Senos que desaparecen rapido (tendran frecuencia alta)
-A_b=[7    4   3];
-W_b=[3.5 2.5  2.5]*2*pi;
-tau2=3;
+A_b=[1    0.5   0.4];
+W_b=[1.7 2.5  2.5]*2*pi;
+tau2=4;
+
+% % Excitacion
+% Im_cc=[0  0.4  0.15];
+% 
+% % Senos que se amortiguan lentamente (tendran frec baja)
+% A_a=[0.7    1.3  0.5];
+% W_a=[0.5  0.5  0.5]*2*pi;
+% tau=7;
+% 
+% % Senos que desaparecen rapido (tendran frecuencia alta)
+% A_b=[1    0.5   0.4];
+% W_b=[1.7 2.5  2.5]*2*pi;
+% tau2=4;
 
 
 Ts=1e-3;
