@@ -1,43 +1,31 @@
-%%%%%%%%%%%%%%% Modelo Dinámico %%%%%%%%%%%%%%%
-function [qdd] = ModeloDinamico_R3GDL(in)
+function [qdd] = ModeloDinamicoEstimado_G03(in)
 
-% Variables de entrada en la funcion:
+% Variables de entrada en la funcion: [q(3)  qd(3)  Imotor(3)]
 q1        = in(1);
 q2        = in(2);
 q3        = in(3);
 qd1       = in(4);
 qd2       = in(5);
 qd3       = in(6);
-Im1      = in(7);
-Im2      = in(8);
-Im3      = in(9);
+Im1       = in(7);
+Im2       = in(8);
+Im3       = in(9);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Parámetros base estimados:
 t_red=[
-%    -1.7594
-%    -0.3966
-%     8.3284
-%    16.0353
-%     0.3977
-%     0.0072
-%     0.0120
-%     0.0085
-%     0.0150
-%     2.9131
-%     0.9710
-   -8.4807
-   -2.3902
-   11.1254
-    5.6368
-   2.1748
-    0.0139
-    0.0113
-   0.0032
-    0.0133
-    1.2074
-    0.3639
-
+   -1.7594
+   -0.3966
+    8.3284
+   16.0353
+    0.3977
+    0.0072
+    0.0120
+    0.0085
+    0.0150
+    2.9131
+    0.9710
 ];
 %                    probar load/save theta 
 
@@ -98,3 +86,4 @@ G=[G1 G2 G3]';
 Im=[Im1 Im2 Im3]';
 
 qdd = inv(M)*(Kt*R*Im-V-G);
+  

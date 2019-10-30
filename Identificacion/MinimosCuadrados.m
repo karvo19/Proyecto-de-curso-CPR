@@ -1,6 +1,6 @@
 % Minimos cuadrados
 clear all
-clc
+%clc
 format short
 
 Tsim=30;
@@ -64,7 +64,7 @@ qddf=filter(num,den,qdd_est);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-run graficas;
+%run graficas;
 
 % Recopilar datos
 q1=[];
@@ -84,7 +84,7 @@ gamma=[];
 
 
 ini=1000;
-fin=15000;
+fin=25000;
 for i=ini:10:fin
     
 %     q1=[q1;q(i,1)];
