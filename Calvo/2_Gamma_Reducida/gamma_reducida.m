@@ -286,6 +286,41 @@ end
 
 gamma = simplify(gamma);
 
+%%
+Kt_Im_R = Ma * [qdd1; qdd2; qdd3] + Va + G;
+
+% Hacemos el cambio de variable Li = li - lci
+Kt_Im_R = subs(Kt_Im_R, lc1, l1 - L1);
+Kt_Im_R = subs(Kt_Im_R, lc2, l2 - L2);
+Kt_Im_R = subs(Kt_Im_R, lc3, l3 - L3);
+
+Kt_Im_R = simplify(Kt_Im_R);
+
+thita=[Ixx1, Iyy1, Izz1, Ixx2, Iyy2, Izz2, Ixx3, Iyy3, Izz3,...
+       Jm1, Jm2, Jm3, Bm1, Bm2, Bm3, ...
+       m1*L1^2, m2*L2^2, m3*L3^2, m1*L1, m2*L2, m3*L3, ...
+       m1, m2, m3]; 
+   
+gamma = sym(zeros(3, length(thita)));
+
+gamma(:,16) = diff((diff(Kt_Im_R, L1, 2)/2),m1);
+gamma(:,19) = diff((diff((Kt_Im_R - gamma(:,16)*m1*L1^2),L1)),m1);
+gamma(:,22) = diff((Kt_Im_R - gamma(:,19)*m1*L1 - gamma(:,16)*m1*L1^2),m1);
+
+gamma(:,17) = diff((diff(Kt_Im_R, L2, 2)/2),m2);
+gamma(:,20) = diff((diff((Kt_Im_R - gamma(:,17)*m2*L2^2),L2)),m2);
+gamma(:,23) = diff((Kt_Im_R - gamma(:,20)*m2*L2 - gamma(:,17)*m2*L2^2),m2);
+
+gamma(:,18) = diff((diff(Kt_Im_R, L3, 2)/2),m3);
+gamma(:,21) = diff((diff((Kt_Im_R - gamma(:,18)*m3*L3^2),L3)),m3);
+gamma(:,24) = diff((Kt_Im_R - gamma(:,21)*m3*L3 - gamma(:,18)*m3*L3^2),m3);
+
+for j = 1:15
+    gamma(:,j) = diff(Kt_Im_R, thita(j));
+end
+
+gamma = simplify(gamma);
+
 % %% Identificacion de las columnas independientes de gamma con métodos numericos
 % gamma_numerica = zeros(length(thita),length(thita));
 % g = 9.8;
@@ -306,7 +341,9 @@ gamma = simplify(gamma);
 % % Columnas_Independientes -> 5 8 10 11 12 16 18 19 20 23 24
 
 %% Reduccion de gamma
-Columnas_Independientes = [5 8 10 11 12 16 18 19 20 23 24];
+% Columnas_Independientes = [5 8 10 11 12 16 18 19 20 23 24];
+Columnas_Independientes = [2 4 6 7 9 12 13 14 15 20 21];
+
 gamma_reducida = [];
 for i = 1:length(Columnas_Independientes)
     gamma_reducida = [gamma_reducida, gamma(:,Columnas_Independientes(i))];
@@ -315,7 +352,8 @@ end
 %% Obtencion de gamma simplificada para calculo simbolico
 gamma_sim = [];
 thita_sim = [];
-for i = 1:(length(gamma)-2)
+%for i = 1:(length(gamma)-2)
+for i = [1:11 16:20 22:24]
     if sum(gamma(:,i)) ~= 0
         gamma_sim = [gamma_sim, gamma(:,i)];
         thita_sim = [thita_sim; thita(i)];
@@ -375,6 +413,55 @@ gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada];
 q1 = q1_6; qd1 = qd1_6; qdd1 = qdd1_6; 
 q2 = q2_6; qd2 = qd2_6; qdd2 = qdd2_6; 
 q3 = q3_6; qd3 = qd3_6; qdd3 = qdd3_6; 
+
+gamma_sim_evaluada = eval(gamma_sim);
+
+gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada(1:1,:)];
+
+%% Ampliacion de gamma simplificada para hacerla cuadrada
+syms q1_1 qd1_1 qdd1_1 q2_1 qd2_1 qdd2_1 q3_1 qd3_1 qdd3_1 real
+syms q1_2 qd1_2 qdd1_2 q2_2 qd2_2 qdd2_2 q3_2 qd3_2 qdd3_2 real
+syms q1_3 qd1_3 qdd1_3 q2_3 qd2_3 qdd2_3 q3_3 qd3_3 qdd3_3 real
+syms q1_4 qd1_4 qdd1_4 q2_4 qd2_4 qdd2_4 q3_4 qd3_4 qdd3_4 real
+syms q1_5 qd1_5 qdd1_5 q2_5 qd2_5 qdd2_5 q3_5 qd3_5 qdd3_5 real
+
+gamma_sim_ampliada = [];
+
+q1 = q1_1; qd1 = qd1_1; qdd1 = qdd1_1; 
+q2 = q2_1; qd2 = qd2_1; qdd2 = qdd2_1; 
+q3 = q3_1; qd3 = qd3_1; qdd3 = qdd3_1; 
+
+gamma_sim_evaluada = eval(gamma_sim);
+
+gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada];
+
+q1 = q1_2; qd1 = qd1_2; qdd1 = qdd1_2; 
+q2 = q2_2; qd2 = qd2_2; qdd2 = qdd2_2; 
+q3 = q3_2; qd3 = qd3_2; qdd3 = qdd3_2; 
+
+gamma_sim_evaluada = eval(gamma_sim);
+
+gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada];
+
+q1 = q1_3; qd1 = qd1_3; qdd1 = qdd1_3; 
+q2 = q2_3; qd2 = qd2_3; qdd2 = qdd2_3; 
+q3 = q3_3; qd3 = qd3_3; qdd3 = qdd3_3; 
+
+gamma_sim_evaluada = eval(gamma_sim);
+
+gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada];
+
+q1 = q1_4; qd1 = qd1_4; qdd1 = qdd1_4; 
+q2 = q2_4; qd2 = qd2_4; qdd2 = qdd2_4; 
+q3 = q3_4; qd3 = qd3_4; qdd3 = qdd3_4; 
+
+gamma_sim_evaluada = eval(gamma_sim);
+
+gamma_sim_ampliada = [gamma_sim_ampliada; gamma_sim_evaluada];
+
+q1 = q1_5; qd1 = qd1_5; qdd1 = qdd1_5; 
+q2 = q2_5; qd2 = qd2_5; qdd2 = qdd2_5; 
+q3 = q3_5; qd3 = qd3_5; qdd3 = qdd3_5; 
 
 gamma_sim_evaluada = eval(gamma_sim);
 

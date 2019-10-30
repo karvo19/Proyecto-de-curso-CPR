@@ -1,5 +1,4 @@
-%%%%%%%%%%%%%%% Modelo Dinámico %%%%%%%%%%%%%%%
-function [qdd] = ModeloDinamico_R3GDL(in)
+function [qdd] = ModeloDinamicoEstimado_GXX(in)
 
 % Variables de entrada en la funcion:
 q1        = in(1);
@@ -26,20 +25,6 @@ t_red=[
 %     0.0150
 %     2.9131
 %     0.9710
-<<<<<<< HEAD
-   -8.4807
-   -2.3902
-   11.1254
-    5.6368
-   2.1748
-    0.0139
-    0.0113
-   0.0032
-    0.0133
-    1.2074
-    0.3639
-
-=======
 
 
          -1.75940038424998
@@ -53,7 +38,6 @@ t_red=[
         0.0149999999999998
           2.91314677499997
          0.971048924999985
->>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 ];
 %                    probar load/save theta 
 
@@ -119,3 +103,4 @@ G=[G1 G2 G3]';
 Im=[Im1 Im2 Im3]';
 
 qdd = inv(M)*(Kt*R*Im-V-G);
+  

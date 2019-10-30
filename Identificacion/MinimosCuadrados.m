@@ -1,9 +1,29 @@
 % Minimos cuadrados
+<<<<<<< HEAD
 clear all
 %clc
-format short
+=======
+clear a*
+clear d*
+clear f*
+clear g*
+clear i*
+clear I*
+clear K*
+clear l*
+clear n*
+clear q*
+clear R*
+clear s*
+clear S*
+clear t*
+clear T*
+clear w*
 
-Tsim=30;
+
+% clc
+>>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
+format short
 
 l0 = 1.00;
 l1 = 0.40;
@@ -12,9 +32,13 @@ l3 = 0.50;
 
 g=9.81;
 
-R1=50;
-R2=30;
-R3=15;
+R1=1;
+R2=1;
+R3=1;
+
+% R1=50;
+% R2=30;
+% R3=15;
 
 Kt1=0.5;
 Kt2=0.4;
@@ -64,7 +88,11 @@ qddf=filter(num,den,qdd_est);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+<<<<<<< HEAD
 %run graficas;
+=======
+% run graficas;
+>>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 
 % Recopilar datos
 q1=[];
@@ -84,7 +112,11 @@ gamma=[];
 
 
 ini=1000;
+<<<<<<< HEAD
 fin=25000;
+=======
+fin=250000;
+>>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 for i=ini:10:fin
     
 %     q1=[q1;q(i,1)];
@@ -102,25 +134,42 @@ for i=ini:10:fin
 %     Im1=[Im1;Im(i,1)];
 %     Im2=[Im2;Im(i,2)];
 %     Im3=[Im3;Im(i,3)];
+
+    q1=q(i,1);
+    q2=q(i,2);
+    q3=q(i,3);
+
+    qd1=qd(i,1);
+    qd2=qd(i,2);
+    qd3=qd(i,3);
+
+    qdd1=qdd(i,1);
+    qdd2=qdd(i,2);
+    qdd3=qdd(i,3);
+
+%     q1=qms(i,1);
+%     q2=qms(i,2);
+%     q3=qms(i,3);
+%     
+%     qd1=qdmsf(i,1);
+%     qd2=qdmsf(i,2);
+%     qd3=qdmsf(i,3);
+%     
+%     qdd1=qddf(i,1);
+%     qdd2=qddf(i,2);
+%     qdd3=qddf(i,3);
     
-    q1=qms(i,1);
-    q2=qms(i,2);
-    q3=qms(i,3);
-    
-    qd1=qdmsf(i,1);
-    qd2=qdmsf(i,2);
-    qd3=qdmsf(i,3);
-    
-    qdd1=qddf(i,1);
-    qdd2=qddf(i,2);
-    qdd3=qddf(i,3);
-    
-    I=[
-        I;
-        Ims(i,1);
-        Ims(i,2);
-        Ims(i,3)];
+%     I=[
+%         I;
+%         Ims(i,1);
+%         Ims(i,2);
+%         Ims(i,3)];
   
+I=[
+        I;
+        Im(i,1);
+        Im(i,2);
+        Im(i,3)];
     
 	gamma=[gamma;
 
@@ -133,8 +182,7 @@ end
 
 [Theta,Sigma]=lscov(gamma,I);
 
-Theta
-dtr=100*Sigma./Theta
+salida = [Theta, 100*Sigma./Theta];
 
 
 
