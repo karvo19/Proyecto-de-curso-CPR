@@ -26,7 +26,7 @@ persistent t_tramos;
 % numero de tramo:         1             2            3             n-1              n           n+1
 
 % set up de las variables y calculos/comprobaciones a realizar unicamente la primera vez
-if t == 0
+if t < 1e-8
     tramo = 0;
     flag = 2;
     
@@ -104,7 +104,6 @@ if t == 0
         
         flag = 0;
     end
-    q
 end
 
 % Calculos a realizar una vez por llamada a la función:
