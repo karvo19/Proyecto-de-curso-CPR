@@ -1,9 +1,5 @@
 % Minimos cuadrados
-<<<<<<< HEAD
-clear all
-%clc
-=======
-clear a*
+ssclear a*
 clear d*
 clear f*
 clear g*
@@ -22,7 +18,6 @@ clear w*
 
 
 % clc
->>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 format short
 
 l0 = 1.00;
@@ -88,11 +83,7 @@ qddf=filter(num,den,qdd_est);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-<<<<<<< HEAD
-%run graficas;
-=======
 % run graficas;
->>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 
 % Recopilar datos
 q1=[];
@@ -112,11 +103,7 @@ gamma=[];
 
 
 ini=1000;
-<<<<<<< HEAD
-fin=25000;
-=======
 fin=250000;
->>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 for i=ini:10:fin
     
 %     q1=[q1;q(i,1)];

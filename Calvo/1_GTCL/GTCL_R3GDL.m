@@ -73,15 +73,10 @@ if t == 0
         pendiente = (XYZfin - XYZinicio)/duracion;
         for punto = 0:(n+1)
             aux = (pendiente*T*punto + XYZinicio);
-            q1 = atan(aux(2)/aux(1));
-            C3 = (aux(1)^2+aux(2)^2+(aux(3)-L0-L1)^2-L2^2-L3^2)/(2*L2*L3);
-            q3 = atan(sqrt(1-C3^2)/C3);
-            q2 = atan((aux(3)-L0-L1)/sqrt(aux(1)^2+aux(2)^2))-atan((L3*sin(q3))/(L2+L3*cos(q3)));
-            q(:, punto+1) = [q1 q2 q3]';
+            q(:, punto+1) = CinematicaInversa(aux);
             % Calculamos los tiempos a los que comienza cada tramo
             t_tramos(punto+1) = inicio + T * punto;
         end
-        q
 
         % Método heurístico para obtener las velocidades de cada tramo
         qd = zeros(3, n + 2);
@@ -109,6 +104,7 @@ if t == 0
         
         flag = 0;
     end
+    q
 end
 
 % Calculos a realizar una vez por llamada a la función:
