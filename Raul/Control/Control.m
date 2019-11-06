@@ -42,4 +42,3 @@ u=Kp.*err_q+Kd.*err_qd+Ki.*Int_err;
 % Ecuación del robot
   Tau=[qddr1;qddr2;qddr3]+u;
 
-
