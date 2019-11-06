@@ -1,5 +1,4 @@
-% Minimos cuadrados
-ssclear a*
+clear a*
 clear d*
 clear f*
 clear g*
@@ -15,7 +14,6 @@ clear S*
 clear t*
 clear T*
 clear w*
-
 
 % clc
 format short
@@ -84,7 +82,6 @@ qddf=filter(num,den,qdd_est);
 
 
 % run graficas;
-
 % Recopilar datos
 q1=[];
 q2=[];
@@ -100,10 +97,11 @@ Im2=[];
 Im3=[];
 I=[];
 gamma=[];
+Hs=[];
 
 
-ini=1000;
-fin=250000;
+ini=100;
+fin=25000;
 for i=ini:10:fin
     
 %     q1=[q1;q(i,1)];
@@ -122,41 +120,41 @@ for i=ini:10:fin
 %     Im2=[Im2;Im(i,2)];
 %     Im3=[Im3;Im(i,3)];
 
-    q1=q(i,1);
-    q2=q(i,2);
-    q3=q(i,3);
+%     q1=q(i,1);
+%     q2=q(i,2);
+%     q3=q(i,3);
+% 
+%     qd1=qd(i,1);
+%     qd2=qd(i,2);
+%     qd3=qd(i,3);
+% 
+%     qdd1=qdd(i,1);
+%     qdd2=qdd(i,2);
+%     qdd3=qdd(i,3);
 
-    qd1=qd(i,1);
-    qd2=qd(i,2);
-    qd3=qd(i,3);
-
-    qdd1=qdd(i,1);
-    qdd2=qdd(i,2);
-    qdd3=qdd(i,3);
-
-%     q1=qms(i,1);
-%     q2=qms(i,2);
-%     q3=qms(i,3);
-%     
-%     qd1=qdmsf(i,1);
-%     qd2=qdmsf(i,2);
-%     qd3=qdmsf(i,3);
-%     
-%     qdd1=qddf(i,1);
-%     qdd2=qddf(i,2);
-%     qdd3=qddf(i,3);
+    q1=qms(i,1);
+    q2=qms(i,2);
+    q3=qms(i,3);
     
-%     I=[
-%         I;
-%         Ims(i,1);
-%         Ims(i,2);
-%         Ims(i,3)];
-  
-I=[
+    qd1=qdmsf(i,1);
+    qd2=qdmsf(i,2);
+    qd3=qdmsf(i,3);
+    
+    qdd1=qddf(i,1);
+    qdd2=qddf(i,2);
+    qdd3=qddf(i,3);
+    
+    I=[
         I;
-        Im(i,1);
-        Im(i,2);
-        Im(i,3)];
+        Ims(i,1);
+        Ims(i,2);
+        Ims(i,3)];
+  
+% I=[
+%         I;
+%         Im(i,1);
+%         Im(i,2);
+%         Im(i,3)];
     
 	gamma=[gamma;
 
