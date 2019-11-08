@@ -15,6 +15,7 @@ Im3      = in(9);
 
 % Parámetros base estimados:
 t_red=[
+    % Reductoras
 %    -1.7594
 %    -0.3966
 %     8.3284
@@ -26,22 +27,8 @@ t_red=[
 %     0.0150
 %     2.9131
 %     0.9710
-<<<<<<< HEAD
-   -8.4807
-   -2.3902
-   11.1254
-    5.6368
-   2.1748
-    0.0139
-    0.0113
-   0.0032
-    0.0133
-    1.2074
-    0.3639
 
-=======
-
-
+% Accionamiento directo (Parametros con medidas perfectas)
          -1.75940038424998
         -0.396642654749998
           2.16551925299997
@@ -53,11 +40,7 @@ t_red=[
         0.0149999999999998
           2.91314677499997
          0.971048924999985
->>>>>>> 3623cc8a2dde2ec97e74a804993e7b262874012a
 ];
-%                    probar load/save theta 
-
-
 
 % Datos geométricos / gravedad / reductoras / constantes de par
 l0 = 1.00;
@@ -113,9 +96,6 @@ G3=g*t_red(11)*cos(q2+q3);
 G=[G1 G2 G3]';
 
 % Comprobar que M es definida postiva !!!!!
-
-
-%   %   
 Im=[Im1 Im2 Im3]';
 
 qdd = inv(M)*(Kt*R*Im-V-G);

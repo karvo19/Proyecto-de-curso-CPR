@@ -24,6 +24,36 @@ thita_reducida = [    Iyy1 + Iyy2 + Iyy3 - Izz2 - Izz3 + 2500*Jm1 - 900*Jm2
                                                          Ixx3 - Iyy3 + Izz3
                                                                         Jm3 
                                                                         Bm3];
+%% Estimacion de parámetros
+% Accionamiento directo (Parametros con medidas perfectas)
+clear all;
+syms qdd1 qdd2 qdd3 g real
+
+gamma_reducida = [];
+thita_reducida = [
+         -1.75940038424998
+        -0.396642654749998
+          2.16551925299997
+          1.77669585024997
+         0.397667654749993
+       0.00722506600000024
+        0.0119999999999998
+       0.00849999999999985
+        0.0149999999999998
+          2.91314677499997
+         0.971048924999985
+];
+
+l0 = 1.00;
+l1 = 0.40;
+l2 = 0.70;
+l3 = 0.50;
+
+g = 9.81;
+
+R1 = 1;
+R2 = 1;
+R3 = 1;
 
 Kt_Im_R = simplify(gamma_reducida*thita_reducida);
 
