@@ -4,92 +4,38 @@ global kp1 kp2 kp3;
 global ki1 ki2 ki3;
 global kd1 kd2 kd3;
 
-% syms q1 q2 q3 qd1 qd2 qd3;
-% 
-% % Matriz de Inercias
-%   M = [(128*q3*cos(q2)^2)/25-(7847*sin(2*q2))/5000-(32*q3*sin(2*q2))/25+(8067*cos(q2)^2)/5000+(16*q3^2*cos(q2)^2)/5+474911/5000,0,0;
-%       0,((16*q3)/5+64/25)*(q3+4/5)+4137/50,-32/25;
-%       0,-32/25,939/20];
-%   
-%   M = vpa(M,5)
-%  
-% % Matriz de aceleraciones centrípetas y de Coriolis
-%   V = [-(qd1*(31388*qd2*cos(2*q2)-25600*qd3-25600*qd3*cos(2*q2)+16134*qd2*sin(2*q2)+12800*qd3*sin(2*q2)-32000*q3*qd3+25600*q3*qd2*cos(2*q2)-32000*q3*qd3*cos(2*q2)+51200*q3*qd2*sin(2*q2)+32000*q3^2*qd2*sin(2*q2)-225))/10000;
-%       (9*qd2)/625+(128*qd2*qd3)/25+(7847*qd1^2*cos(2*q2))/5000+(8067*qd1^2*sin(2*q2))/10000+(8*q3^2*qd1^2*sin(2*q2))/5+(32*q3*qd2*qd3)/5+(32*q3*qd1^2*cos(2*q2))/25+(64*q3*qd1^2*sin(2*q2))/25;
-%       (9*qd3)/400-(64*qd1^2*cos(q2)^2)/25+(16*qd1^2*sin(2*q2))/25-(16*q3*qd2^2)/5-(64*qd2^2)/25-(16*q3*qd1^2*cos(q2)^2)/5];
-%   
-%   V = vpa(V,5)
-
 % Simplificando y aplicando las consideraciones tomadas, las matrices M y V resultan en:
 
 % M =
 %  
-% [ 94.982,     0,     0]
-% [ 0,      82.74,     0]
-% [ 0,          0, 46.95]
+% [ 7.049975495999897923127264220966,       0,     0]
+% [ 0,      8.8345799999998551044200212345459,     0]
+% [ 0,          0, 1.1568363449999807812673680018634]
 
 % V =
 % 
-%  0.0225*qd1
-%  0.0144*qd2
-%  0.0225*qd3
+%  0.024*qd1
+%  0.02125*qd2
+%  0.042857142857142857142857142857143*qd3
 
 % Ecuación del robot
 %    Tau = M*qpp + V + G
 
-% PD con cancelacion                <- 1        
-    if control == 1
-        M11 = 94.982;
-        M22 = 82.74;
-        M33 = 46.95;
-
-        V1 = 0.0225;
-        V2 = 0.0144;
-        V3 = 0.0225;
-        
-        % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
-        % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
-        % G33 = tf(1/V3,[M33/V3 V3/V3 0]);
-        k1 = 1/V1;
-        k2 = 1/V2;
-        k3 = 1/V3;
-        
-        tau1 = M11/V1;
-        tau2 = M22/V2;
-        tau3 = M33/V3;
-        
-        Tm = 0.001;
-        Wn = pi/Tm;        
-        Wc = Wn/20;        
-        tsbc = pi/Wc;
-        
-        % C(s) = Kc/K_i*(Tau_i*s+1)
-        kc = 3/tsbc;     
-        
-        ki1 = 0;
-        ki2 = 0;
-        ki3 = 0;
-        kp1 = kc/k1;
-        kp2 = kc/k2;
-        kp3 = kc/k3;
-        kd1 = kp1*tau1;
-        kd2 = kp2*tau2;
-        kd3 = kp3*tau3;
     
-% PD sin cancelacion                <- 2       
-    elseif control == 2
-        % M11 = 94.982;
-        % M22 = 82.74;
-        % M33 = 46.95;
-        % 
-        % V1 = 0.0225;
-        % V2 = 0.0144;
-        % V3 = 0.0225;
-        % 
+% PD sin cancelacion                <- 1
+    if control == 1
+        % M11 = 7.049975495999897923127264220966;
+        % M22 = 8.8345799999998551044200212345459;
+        % M33 = 1.1568363449999807812673680018634;
+        
+        % V1 = 0.024;
+        % V2 = 0.02125;
+        % V3 = 0.042857142857142857142857142857143;
+        
         % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
         % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
         % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
-        % 
+        
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
         % figure;bode(G33,logspace(0,3,1000));grid;title('Bode G33');
@@ -99,10 +45,12 @@ global kd1 kd2 kd3;
         Wc = Wn/20;        
         tsbc = pi/Wc;
         
+        % Mirando el bode del sistema obtenemos el margen de fase actual
         Mfact1 = 0;
         Mfact2 = 0;
         Mfact3 = 0;
         
+        % Segun especificaciones indicamos el margen de fase que deseamos
         Mfdes1 = 70;
         Mfdes2 = 70;
         Mfdes3 = 70;
@@ -118,14 +66,15 @@ global kd1 kd2 kd3;
         % C11 = tf([tau1 1],1);
         % C22 = tf([tau2 1],1);
         % C33 = tf([tau3 1],1);
-        % 
+        
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
         
-        Mg1 = -118;
-        Mg2 = -117;
-        Mg3 = -112;
+        % Medimos el margen de ganancia a Wc para calcular las ganancias
+        Mg1 = -95.5;
+        Mg2 = -97.4;
+        Mg3 = -79.8;
         
         ki1 = 0;
         ki2 = 0;
