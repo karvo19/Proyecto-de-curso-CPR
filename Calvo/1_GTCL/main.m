@@ -35,6 +35,48 @@ sim('GTCL.mdl');
 % graficas_pruebas;
 graficas_gtcl;
 
+%%
+% Dimensiones (m)
+L0 = 1.00;    % Base
+L1 = 0.40;  % Esalbón 1 
+L2 = 0.70;  % Esalbón 2
+L3 = 0.50;  % Esalbón 3
+
+L(1) = Link([0, L1+L0, 0, pi/2]);
+L(1).offset = 0;
+L(2) = Link([0, 0, L2, 0]);
+L(2).offset = 0;
+L(3) = Link([0, 0, L3, 0]);
+L(3).offset = 0;
+brazoC = SerialLink(L, 'name', 'brazoC');
+
+puntos_q = [
+                         0     -9.25185853854297e-17                         0
+        0.0234966750664329        -0.275941180203625          1.09327818246034
+        0.0573890013542422        -0.187989167815616          1.46592855631404
+         0.110365911344146        0.0347376670806416          1.63554364322182
+         0.204030784638009         0.339192567878672          1.61937232615786
+         0.407211560836068         0.670703213487265          1.41708046113595
+                         1                         1                         1];
+puntos_xyz = zeros(length(puntos_q),3);
+for i = 1:length(puntos_q)
+    puntos_xyz(i,:) = CinematicaDirecta(puntos_q(i,:))';
+end
+
+xyz = zeros(length(qr),3);
+for i = 1:length(qr)
+    xyz(i,:) = CinematicaDirecta(qr(i,:))';
+end
+
+figure;plot3([XYZini(1) XYZfin(1)],[XYZini(2) XYZfin(2)],[XYZini(3) XYZfin(3)],'r','LineWidth',1.5); grid;hold on;
+plot3(xyz(:,1),xyz(:,2),xyz(:,3),'b','LineWidth',1.5);
+plot3(puntos_xyz(:,1),puntos_xyz(:,2),puntos_xyz(:,3),'k*');
+
+for i = 1:20:length(qr)
+    brazoC.plot(qr(i,:));
+    % pause(0.1);
+end
+
 %% 
 clear all;
 XYZini = CinematicaDirecta([0 0 0]);

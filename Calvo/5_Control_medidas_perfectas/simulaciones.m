@@ -12,17 +12,19 @@
         
     % Control utilizado
         % PD sin cancelacion                <- 1
-        
-    % Controles del año pasado en controles.m no actualizados de momento
-        % PID analitico sin cancelacion     <- 3
-        % PID frecuencial sin cancelacion   <- 4
-        % Precompensacion de G              <- 5
-        % Precompensacion de V y G          <- 6
-        % Feed forward                      <- 7
-        % Control por par calculado         <- 8
+        % PID analitico sin cancelacion     <- 2
+        % PID frecuencial sin cancelacion   <- 3
+        % Precompensacion de G              <- 4
+        % Precompensacion de V y G          <- 5
+        % Feed forward                      <- 6       
+        % Control por par calculado         <- 7
         
         global control;
-        control = 1;
+        global control_4;
+        control = 7;
+
+        % Control a usar con el precompensador de G (control_4 € [1,3])
+        control_4 = 3;
         
     % Llamada al script que carga las K del control
         controles

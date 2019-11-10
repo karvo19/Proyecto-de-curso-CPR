@@ -1,4 +1,4 @@
-function [Tau] = Control(in)
+function [Tau] = Control_real(in)
 
 % Variables de entrada en la funcion: [q(2)  qp(2)  Imotor(2)]
 qr1        = in(1);
@@ -27,22 +27,22 @@ global kp1 kp2 kp3;
 global ki1 ki2 ki3;
 global kd1 kd2 kd3;
 
-persistent Int_Err;
+persistent Int_Err_real;
 
 if tiempo < 1e-5
-    Int_Err = [0;0;0];
+    Int_Err_real = [0;0;0];
 end
 
 Err_q = [qr1-q1;qr2-q2;qr3-q3];
 Err_qd = [qdr1-qd1;qdr2-qd2;qdr3-qd3];
 
-Int_Err = Int_Err + Tm*Err_q;
+Int_Err_real = Int_Err_real + Tm*Err_q;
 
 kp = [kp1;kp2;kp3];
 ki = [ki1;ki2;ki3];
 kd = [kd1;kd2;kd3];
 
-u = kp.*Err_q + kd.*Err_qd + ki.*Int_Err;
+u = kp.*Err_q + kd.*Err_qd + ki.*Int_Err_real;
 
 % Constantes de control declaradas en controles.m
 
@@ -64,27 +64,26 @@ g = 9.81;
  g*((21866077883942265*cos(q2 + q3))/9007199254740992 + (16399558412956785*cos(q2))/2251799813685248);
                                                   (21866077883942265*g*cos(q2 + q3))/7881299347898368];
   
-% PD con cancelacion                <- 1  
-% PD sin cancelacion                <- 2
-% PID analitico sin cancelacion     <- 3
-% PID frecuencial sin cancelacion   <- 4
-    if control == 1 || control == 3 || control == 4
+% PD sin cancelacion                <- 1
+% PID analitico sin cancelacion     <- 2
+% PID frecuencial sin cancelacion   <- 3
+    if control == 1 || control == 2 || control == 3
         Tau = u;
         
-% Precompensacion de G              <- 5
-    elseif control == 5
+% Precompensacion de G              <- 4
+    elseif control == 4
         Tau = u + G;        
         
-% Precompensacion de V y G          <- 6
-    elseif control == 6
+% Precompensacion de V y G          <- 5
+    elseif control == 5
         Tau = u + V + G;
         
-% Feed forward                      <- 7
-    elseif control == 7
+% Feed forward                      <- 6
+    elseif control == 6
         Tau = M*[qddr1;qddr2;qddr3] + V + G + u;
         
-% Control por par calculado         <- 8
-    elseif control == 8
+% Control por par calculado         <- 7
+    elseif control == 7
         Tau = M*([qddr1;qddr2;qddr3] + u) + V + G;
          
     else
