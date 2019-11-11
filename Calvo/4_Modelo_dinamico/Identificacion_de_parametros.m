@@ -83,17 +83,17 @@ gamma_reducida = [
     (1/(Kt3*R3))*[                                               0,                                                              -(qd1^2*sin(2*q2 + 2*q3))/2,    0,    0, qdd2 + qdd3, R3^2*qdd3,        0,        0, R3^2*qd3,         0,                 g*cos(q2 + q3) + l2*qdd2*cos(q3) + (l2*qd1^2*sin(q3))/2 + l2*qd2^2*sin(q3) + (l2*qd1^2*sin(2*q2 + q3))/2]];
     
 thita_reducida = [
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
-                     0
+                       -1.7594 
+                       -0.3966   
+                        2.1575  
+                        1.7723  
+                        0.3977    
+                        0.0072   
+                        0.0120   
+                        0.0085   
+                        0.0150   
+                        2.9131   
+                        0.9710
 ];
 
 Im = simplify(gamma_reducida*thita_reducida);

@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.47"
+    ComputedModelVersion    "1.50"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -105,9 +105,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "Alvaro"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Oct 23 15:29:38 2019"
-  RTWModifiedTimeStamp	  493745358
-  ModelVersionFormat	  "1.%<AutoIncrement:47>"
+  LastModifiedDate	  "Mon Nov 11 10:06:41 2019"
+  RTWModifiedTimeStamp	  495367599
+  ModelVersionFormat	  "1.%<AutoIncrement:50>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
@@ -1667,8 +1667,8 @@ Model {
       SID		      "40"
       Position		      [835, 289, 865, 321]
       ZOrder		      27
-      Minimum		      "-1500*2*pi/60./[R1 R2 R3]*0.02"
-      Maximum		      "1500*2*pi/60./[R1 R2 R3]*0.02"
+      Minimum		      "-1500*2*pi/60./[R1 R2 R3]*0.01"
+      Maximum		      "1500*2*pi/60./[R1 R2 R3]*0.01"
       SampleTime	      "Ts/10"
     }
     Block {

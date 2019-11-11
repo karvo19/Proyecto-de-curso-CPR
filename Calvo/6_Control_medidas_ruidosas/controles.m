@@ -9,9 +9,9 @@ global kd1 kd2 kd3;
 
 % M =
 %  
-% [ 7.049975495999897923127264220966,       0,     0]
-% [ 0,      8.8345799999998551044200212345459,     0]
-% [ 0,          0, 1.1568363449999807812673680018634]
+% [ 7.0338,       0,                                 0]
+% [ 0,       8.8235,                                 0]
+% [ 0,            0, 1.1568571428571428571428571428571]
 
 % V =
 % 
@@ -22,17 +22,16 @@ global kd1 kd2 kd3;
 % Ecuación del robot
 %    Tau = M*qpp + V + G
 
+M11 = 7.0338;
+M22 = 8.8235;
+M33 = 1.1568571428571428571428571428571;
+
+V1 = 0.024;
+V2 = 0.02125;
+V3 = 0.042857142857142857142857142857143;
     
-% PD sin cancelacion                <- 1
+% PD sin cancelacion                <- 1 (PENDIENTE)
     if control == 1
-        % M11 = 7.049975495999897923127264220966;
-        % M22 = 8.8345799999998551044200212345459;
-        % M33 = 1.1568363449999807812673680018634;
-        
-        % V1 = 0.024;
-        % V2 = 0.02125;
-        % V3 = 0.042857142857142857142857142857143;
-        
         % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
         % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
         % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
@@ -87,16 +86,8 @@ global kd1 kd2 kd3;
         kd2 = kp2*tau2;
         kd3 = kp3*tau3;
         
-% PID analitico sin cancelacion     <- 2
+% PID analitico sin cancelacion     <- 2 (PENDIENTE)
     elseif control == 2
-        M11 = 7.049975495999897923127264220966;
-        M22 = 8.8345799999998551044200212345459;
-        M33 = 1.1568363449999807812673680018634;
-        
-        V1 = 0.024;
-        V2 = 0.02125;
-        V3 = 0.042857142857142857142857142857143;
-        
         Tm = 0.001;
         Wn = pi/Tm;        
         Wc = Wn/80;        
@@ -154,16 +145,8 @@ global kd1 kd2 kd3;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
-% PID frecuencial sin cancelacion   <- 3
+% PID frecuencial sin cancelacion   <- 3 (PENDIENTE)
     elseif control == 3
-        M11 = 7.049975495999897923127264220966;
-        M22 = 8.8345799999998551044200212345459;
-        M33 = 1.1568363449999807812673680018634;
-        
-        V1 = 0.024;
-        V2 = 0.02125;
-        V3 = 0.042857142857142857142857142857143;
-        
         % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
         % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
         % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
@@ -181,9 +164,6 @@ global kd1 kd2 kd3;
         Mfact2 = 0;
         Mfact3 = 0;
         
-%         Mfdes1 = 80;
-%         Mfdes2 = 80;
-%         Mfdes3 = 80;
         Mfdes1 = 70;
         Mfdes2 = 70;
         Mfdes3 = 70;
@@ -204,9 +184,6 @@ global kd1 kd2 kd3;
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
          
-%         Mg1 = -83.6;
-%         Mg2 = -85.5;
-%         Mg3 = -67.9;
         Mg1 = -89.4;
         Mg2 = -91.4;
         Mg3 = -73.8;
@@ -237,7 +214,7 @@ global kd1 kd2 kd3;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
-% Precompensacion de G              <- 4
+% Precompensacion de G              <- 4 (PENDIENTE)
     elseif control == 4        
         % Junto con el precompensador de G hay que usar algun control
         
@@ -278,19 +255,11 @@ global kd1 kd2 kd3;
             kd3 = 176.832200746595;
         end
         
-% Precompensacion de V y G          <- 5
+% Precompensacion de V y G          <- 5 (PENDIENTE)
     elseif control == 5
         
         %%%%%%%%%%%%%%%        PD (año pasado)        %%%%%%%%%%%%%%%%%%
         
-        % M11 = 94.982;
-        % M22 = 82.74;
-        % M33 = 46.95;
-        % 
-        % G11 = tf(1/M11,[1 0 0]);
-        % G22 = tf(1/M22,[1 0 0]);
-        % G33 = tf(1/M33,[1 0 0]);        
-        % 
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
         % figure;bode(G33,logspace(0,3,1000));grid;title('Bode G33');
@@ -339,10 +308,6 @@ global kd1 kd2 kd3;
         % kd3 = kp3*tau3;
         
         %%%%%%%%%%%%%%%        PID         %%%%%%%%%%%%%%%%%%
-        
-        M11 = 7.049975495999897923127264220966;
-        M22 = 8.8345799999998551044200212345459;
-        M33 = 1.1568363449999807812673680018634;
         
         G11 = tf(1/M11,[1 0 0]);
         G22 = tf(1/M22,[1 0 0]);
@@ -414,13 +379,9 @@ global kd1 kd2 kd3;
 % Feed forward                      <- 6
     elseif control == 6
         
-        M11 = 7.049975495999897923127264220966;
-        M22 = 8.8345799999998551044200212345459;
-        M33 = 1.1568363449999807812673680018634;
-        
-        % G11 = tf(1/M11,[1 0 0]);
-        % G22 = tf(1/M22,[1 0 0]);
-        % G33 = tf(1/M33,[1 0 0]);        
+        G11 = tf(1/M11,[1 0 0]);
+        G22 = tf(1/M22,[1 0 0]);
+        G33 = tf(1/M33,[1 0 0]);        
         % 
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
@@ -447,13 +408,22 @@ global kd1 kd2 kd3;
         tauc2 = 1/Wc*tan((90+fi2)/2*pi/180);
         tauc3 = 1/Wc*tan((90+fi3)/2*pi/180);
         
-        % C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
-        % C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
-        % C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
+        C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
+        C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
+        C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
         %  
-        % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
-        % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
-        % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
+        figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
+        figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
+        figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
         
         Mg1 = -89.4;
         Mg2 = -91.4;
@@ -485,7 +455,7 @@ global kd1 kd2 kd3;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
-% Control por par calculado         <- 7
+% Control por par calculado         <- 7 (PENDIENTE)
     elseif control == 7   
         
         % G(s) = 1/s^2

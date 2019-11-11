@@ -21,7 +21,7 @@
         
         global control;
         global control_4;
-        control = 7;
+        control = 6;
 
         % Control a usar con el precompensador de G (control_4 € [1,3])
         control_4 = 3;

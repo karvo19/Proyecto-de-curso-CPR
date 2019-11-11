@@ -1,5 +1,6 @@
 MinimosCuadrados
 clc
+
 % Parámetros base estimados:
 Comparacion_Parametros = [...
    -1.7594
@@ -25,4 +26,4 @@ end
 norm(100*Sigma./Theta)
 % Theta
 
-% graficas;
+graficas;
