@@ -63,16 +63,16 @@ V3 = 0.042857142857142857142857142857143;
         tau2 = 1/Wc*tan(fi2*pi/180);
         tau3 = 1/Wc*tan(fi3*pi/180);
         
-        % C11 = tf([tau1 1],1);
-        % C22 = tf([tau2 1],1);
-        % C33 = tf([tau3 1],1);
-        % 
+        C11 = tf([tau1 1],1);
+        C22 = tf([tau2 1],1);
+        C33 = tf([tau3 1],1);
+        
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
         
         % Medimos el margen de ganancia a Wc para calcular las ganancias
-        Mg1 = -95.5;
+        Mg1 = -95.4;
         Mg2 = -97.4;
         Mg3 = -79.8;
         
@@ -147,9 +147,9 @@ V3 = 0.042857142857142857142857142857143;
         
 % PID frecuencial sin cancelacion   <- 3 (PENDIENTE)
     elseif control == 3
-        % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
-        % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
-        % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
+        G11 = tf(1/V1,[M11/V1 V1/V1 0]);
+        G22 = tf(1/V2,[M22/V2 V2/V2 0]);
+        G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
         % 
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
@@ -176,9 +176,9 @@ V3 = 0.042857142857142857142857142857143;
         tauc2 = 1/Wc*tan((90+fi2)/2*pi/180);
         tauc3 = 1/Wc*tan((90+fi3)/2*pi/180);
         
-        % C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
-        % C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
-        % C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
+        C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
+        C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
+        C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
         %  
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
@@ -488,7 +488,7 @@ V3 = 0.042857142857142857142857142857143;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
-% Control por par calculado         <- 7 (PENDIENTE)
+% Control por par calculado con PID         <- 7 (PENDIENTE)
     elseif control == 7   
         
         % G(s) = 1/s^2
@@ -556,6 +556,60 @@ V3 = 0.042857142857142857142857142857143;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
+        
+    % Control por par calculado con PD         <- 8 (PENDIENTE)
+    elseif control == 8   
+        
+        % G(s) = 1/s^2
+        
+        G11 = tf(1,[1 0 0]);
+        G22 = tf(1,[1 0 0]);
+        G33 = tf(1,[1 0 0]);
+        
+        Tm = 0.001;
+        Wn = pi/Tm;        
+        Wc = Wn/20;        
+        tsbc = pi/Wc;
+        
+        % Mirando el bode del sistema obtenemos el margen de fase actual
+        Mfact1 = 0;
+        Mfact2 = 0;
+        Mfact3 = 0;
+        
+        % Segun especificaciones indicamos el margen de fase que deseamos
+        Mfdes1 = 70;
+        Mfdes2 = 70;
+        Mfdes3 = 70;
+        
+        fi1 = Mfdes1 - Mfact1;
+        fi2 = Mfdes2 - Mfact2;
+        fi3 = Mfdes3 - Mfact3;
+        
+        tau1 = 1/Wc*tan(fi1*pi/180);
+        tau2 = 1/Wc*tan(fi2*pi/180);
+        tau3 = 1/Wc*tan(fi3*pi/180);
+        
+        C11 = tf([tau1 1],1);
+        C22 = tf([tau2 1],1);
+        C33 = tf([tau3 1],1);
+        %  
+        % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
+        % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
+        % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
+        
+        Mg1 = -78.5;
+        Mg2 = -78.5;
+        Mg3 = -78.5;
+        
+        ki1 = 0;
+        ki2 = 0;
+        ki3 = 0;
+        kp1 = 10^(-Mg1/20);
+        kp2 = 10^(-Mg2/20);
+        kp3 = 10^(-Mg3/20);
+        kd1 = kp1*tau1;
+        kd2 = kp2*tau2;
+        kd3 = kp3*tau3;
     else
         disp('Ese numero se corresponde con ningun control')
     end
