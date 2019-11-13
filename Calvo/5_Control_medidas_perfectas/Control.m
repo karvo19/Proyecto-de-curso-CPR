@@ -1,4 +1,4 @@
-function [Tau] = Control(in)
+function [Im] = Control(in)
 
 % Variables de entrada en la funcion: [q(2)  qp(2)  Imotor(2)]
 qr1        = in(1);
@@ -68,23 +68,23 @@ g = 9.81;
 % PID analitico sin cancelacion     <- 2
 % PID frecuencial sin cancelacion   <- 3
     if control == 1 || control == 2 || control == 3
-        Tau = u;
+        Im = u;
         
 % Precompensacion de G              <- 4
     elseif control == 4
-        Tau = u + G;        
+        Im = u + G;        
         
 % Precompensacion de V y G          <- 5
     elseif control == 5
-        Tau = u + V + G;
+        Im = u + V + G;
         
 % Feed forward                      <- 6
     elseif control == 6
-        Tau = M*[qddr1;qddr2;qddr3] + V + G + u;
+        Im = M*[qddr1;qddr2;qddr3] + V + G + u;
         
 % Control por par calculado         <- 7
     elseif control == 7
-        Tau = M*([qddr1;qddr2;qddr3] + u) + V + G;
+        Im = M*([qddr1;qddr2;qddr3] + u) + V + G;
          
     else
         disp('Ese numero se corresponde con ningun control')

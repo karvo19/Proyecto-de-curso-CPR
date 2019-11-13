@@ -21,7 +21,7 @@
         
         global control;
         global control_4;
-        control = 6;
+        control = 1;
 
         % Control a usar con el precompensador de G (control_4 € [1,3])
         control_4 = 3;
@@ -33,7 +33,7 @@
         Tm = 0.001;
         
     % ejecutamos la simulacion
-        sim('slGTC_3gdl.mdl');
+        %sim('slGTC_3gdl.mdl');
         
     % dibujamos graficas
         graficas

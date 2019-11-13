@@ -32,9 +32,9 @@ V3 = 0.042857142857142857142857142857143;
     
 % PD sin cancelacion                <- 1 (PENDIENTE)
     if control == 1
-        % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
-        % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
-        % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
+        G11 = tf(1/V1,[M11/V1 V1/V1 0]);
+        G22 = tf(1/V2,[M22/V2 V2/V2 0]);
+        G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
         
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
@@ -66,7 +66,7 @@ V3 = 0.042857142857142857142857142857143;
         % C11 = tf([tau1 1],1);
         % C22 = tf([tau2 1],1);
         % C33 = tf([tau3 1],1);
-        
+        % 
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
@@ -411,7 +411,32 @@ V3 = 0.042857142857142857142857142857143;
         C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
         C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
         C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
-        %  
+        
+%         figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
+%         hold on;        
+%         y1 = get(gca,'ylim');        
+%         plot([Wc Wc],y1,'r');
+%         figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
+%         hold on;        
+%         y1 = get(gca,'ylim');        
+%         plot([Wc Wc],y1,'r');
+%         figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
+%         hold on;        
+%         y1 = get(gca,'ylim');        
+%         plot([Wc Wc],y1,'r');
+        
+        Mg1 = -89.4;
+        Mg2 = -91.4;
+        Mg3 = -73.8;
+        
+        kc1 = 10^(-Mg1/20);
+        kc2 = 10^(-Mg2/20);
+        kc3 = 10^(-Mg3/20);
+        
+        C11 = tf(kc1*conv([tauc1 1],[tauc1 1]),[tauc1 0]);
+        C22 = tf(kc2*conv([tauc2 1],[tauc2 1]),[tauc2 0]);
+        C33 = tf(kc3*conv([tauc3 1],[tauc3 1]),[tauc3 0]);
+        
         figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         hold on;        
         y1 = get(gca,'ylim');        
@@ -425,13 +450,21 @@ V3 = 0.042857142857142857142857142857143;
         y1 = get(gca,'ylim');        
         plot([Wc Wc],y1,'r');
         
-        Mg1 = -89.4;
-        Mg2 = -91.4;
-        Mg3 = -73.8;
+        tau_af = tsbc/30;
+        F_af = tf(1,[tau_af 1]);
         
-        kc1 = 10^(-Mg1/20);
-        kc2 = 10^(-Mg2/20);
-        kc3 = 10^(-Mg3/20);
+        figure;bode(G11*C11*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba11');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
+        figure;bode(G22*C22*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba22');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
+        figure;bode(G33*C33*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba33');
+        hold on;        
+        y1 = get(gca,'ylim');        
+        plot([Wc Wc],y1,'r');
         
         Ti1 = 2*tauc1;
         Ti2 = 2*tauc2;
@@ -526,5 +559,3 @@ V3 = 0.042857142857142857142857142857143;
     else
         disp('Ese numero se corresponde con ningun control')
     end
-    
-    
