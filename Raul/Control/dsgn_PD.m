@@ -13,25 +13,28 @@ Kd=Kp.*tau_i
 
 %% DISEÑO DE UN PD SIN CANCELACION
 
-G11=tf([K_i(1)],conv([tau_i(1) 1],[1 0]));
-G22=tf([K_i(2)],conv([tau_i(2) 1],[1 0]));
-G33=tf([K_i(3)],conv([tau_i(3) 1],[1 0]));
+% G11=tf([K_i(1)],conv([tau_i(1) 1],[1 0]));
+% G22=tf([K_i(2)],conv([tau_i(2) 1],[1 0]));
+% G33=tf([K_i(3)],conv([tau_i(3) 1],[1 0]));
+% 
+
+G=tf(1,[1 0 0]);    %% Doble integrador
 
 wc=150;
-Gain=113.5;
+Gain=77.7;
 C1=tf(1,1);
 Kp=1;
-Kp=10^(Gain/20);
+Kp=10^(Gain/20)
 
 tau=1/wc*tan(70*pi/180);
 
 C1=tf(Kp*[tau 1],1);
 
 
-Gba=C1*G33;
+Gba=C1*G;
 bode(Gba,logspace(0,3,1000)); grid
 
-Kp=[2.1135e+06 8.4140e+05 4.7315e+05];
+% Kp=[2.1135e+06 8.4140e+05 4.7315e+05];
 Ki=[0 0 0];
 Kd=Kp*tau
 
