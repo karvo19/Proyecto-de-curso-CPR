@@ -5,6 +5,12 @@ global kp1 kp2 kp3;
 global ki1 ki2 ki3;
 global kd1 kd2 kd3;
 
+global Tm;
+Tm = 0.001;
+
+control=1;
+control_4=1;
+
 % Simplificando y aplicando las consideraciones tomadas, las matrices M y V resultan en:
 
 % M =
@@ -32,9 +38,9 @@ V3 = 0.042857142857142857142857142857143;
     
 % PD sin cancelacion                <- 1 (PENDIENTE)
     if control == 1
-        G11 = tf(1/V1,[M11/V1 V1/V1 0]);
-        G22 = tf(1/V2,[M22/V2 V2/V2 0]);
-        G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
+        % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
+        % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
+        % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
         
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
@@ -63,16 +69,16 @@ V3 = 0.042857142857142857142857142857143;
         tau2 = 1/Wc*tan(fi2*pi/180);
         tau3 = 1/Wc*tan(fi3*pi/180);
         
-        C11 = tf([tau1 1],1);
-        C22 = tf([tau2 1],1);
-        C33 = tf([tau3 1],1);
+        % C11 = tf([tau1 1],1);
+        % C22 = tf([tau2 1],1);
+        % C33 = tf([tau3 1],1);
         
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
         
         % Medimos el margen de ganancia a Wc para calcular las ganancias
-        Mg1 = -95.4;
+        Mg1 = -95.5;
         Mg2 = -97.4;
         Mg3 = -79.8;
         
@@ -147,9 +153,9 @@ V3 = 0.042857142857142857142857142857143;
         
 % PID frecuencial sin cancelacion   <- 3 (PENDIENTE)
     elseif control == 3
-        G11 = tf(1/V1,[M11/V1 V1/V1 0]);
-        G22 = tf(1/V2,[M22/V2 V2/V2 0]);
-        G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
+        % G11 = tf(1/V1,[M11/V1 V1/V1 0]);
+        % G22 = tf(1/V2,[M22/V2 V2/V2 0]);
+        % G33 = tf(1/V3,[M33/V3 V3/V3 0]);        
         % 
         % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
         % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
@@ -176,9 +182,9 @@ V3 = 0.042857142857142857142857142857143;
         tauc2 = 1/Wc*tan((90+fi2)/2*pi/180);
         tauc3 = 1/Wc*tan((90+fi3)/2*pi/180);
         
-        C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
-        C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
-        C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
+        % C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
+        % C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
+        % C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
         %  
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
@@ -411,7 +417,7 @@ V3 = 0.042857142857142857142857142857143;
         C11 = tf(conv([tauc1 1],[tauc1 1]),[tauc1 0]);
         C22 = tf(conv([tauc2 1],[tauc2 1]),[tauc2 0]);
         C33 = tf(conv([tauc3 1],[tauc3 1]),[tauc3 0]);
-        
+        %  
 %         figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
 %         hold on;        
 %         y1 = get(gca,'ylim');        
@@ -432,39 +438,6 @@ V3 = 0.042857142857142857142857142857143;
         kc1 = 10^(-Mg1/20);
         kc2 = 10^(-Mg2/20);
         kc3 = 10^(-Mg3/20);
-        
-        C11 = tf(kc1*conv([tauc1 1],[tauc1 1]),[tauc1 0]);
-        C22 = tf(kc2*conv([tauc2 1],[tauc2 1]),[tauc2 0]);
-        C33 = tf(kc3*conv([tauc3 1],[tauc3 1]),[tauc3 0]);
-        
-        figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
-        figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
-        figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
-        
-        tau_af = tsbc/30;
-        F_af = tf(1,[tau_af 1]);
-        
-        figure;bode(G11*C11*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba11');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
-        figure;bode(G22*C22*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba22');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
-        figure;bode(G33*C33*F_af*F_af*F_af,logspace(0,3,1000));grid;title('Bode Gba33');
-        hold on;        
-        y1 = get(gca,'ylim');        
-        plot([Wc Wc],y1,'r');
         
         Ti1 = 2*tauc1;
         Ti2 = 2*tauc2;
@@ -488,7 +461,7 @@ V3 = 0.042857142857142857142857142857143;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
-% Control por par calculado con PID         <- 7 (PENDIENTE)
+% Control por par calculado         <- 7 (PENDIENTE)
     elseif control == 7   
         
         % G(s) = 1/s^2
@@ -556,15 +529,14 @@ V3 = 0.042857142857142857142857142857143;
         kd2 = kp2*Td2;
         kd3 = kp3*Td3;
         
+    elseif control == 8
+        % G11 = tf(1,[1 0 0]);
+        % G22 = tf(1,[1 0 0]);
+        % G33 = tf(1,[1 0 0]);        
         
-    % Control por par calculado con PD         <- 8 (PENDIENTE)
-    elseif control == 8   
-        
-        % G(s) = 1/s^2
-        
-        G11 = tf(1,[1 0 0]);
-        G22 = tf(1,[1 0 0]);
-        G33 = tf(1,[1 0 0]);
+        % figure;bode(G11,logspace(0,3,1000));grid;title('Bode G11');
+        % figure;bode(G22,logspace(0,3,1000));grid;title('Bode G22');
+        % figure;bode(G33,logspace(0,3,1000));grid;title('Bode G33');
         
         Tm = 0.001;
         Wn = pi/Tm;        
@@ -589,14 +561,15 @@ V3 = 0.042857142857142857142857142857143;
         tau2 = 1/Wc*tan(fi2*pi/180);
         tau3 = 1/Wc*tan(fi3*pi/180);
         
-        C11 = tf([tau1 1],1);
-        C22 = tf([tau2 1],1);
-        C33 = tf([tau3 1],1);
-        %  
+        % C11 = tf([tau1 1],1);
+        % C22 = tf([tau2 1],1);
+        % C33 = tf([tau3 1],1);
+        
         % figure;bode(G11*C11,logspace(0,3,1000));grid;title('Bode Gba11');
         % figure;bode(G22*C22,logspace(0,3,1000));grid;title('Bode Gba22');
         % figure;bode(G33*C33,logspace(0,3,1000));grid;title('Bode Gba33');
         
+        % Medimos el margen de ganancia a Wc para calcular las ganancias
         Mg1 = -78.5;
         Mg2 = -78.5;
         Mg3 = -78.5;
@@ -613,3 +586,5 @@ V3 = 0.042857142857142857142857142857143;
     else
         disp('Ese numero se corresponde con ningun control')
     end
+    
+    

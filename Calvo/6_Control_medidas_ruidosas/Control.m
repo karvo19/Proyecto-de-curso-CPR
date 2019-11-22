@@ -1,4 +1,4 @@
-function [Tau] = Control(in)
+function [Im] = Control(in)
 
 % Variables de entrada en la funcion: [q(2)  qp(2)  Imotor(2)]
 qr1        = in(1);
@@ -28,10 +28,47 @@ global ki1 ki2 ki3;
 global kd1 kd2 kd3;
 
 persistent Int_Err;
+persistent qdf1_1;
+persistent qdf2_1;
+persistent qdf3_1;
+
+control = 6;
+
+if control == 6
+          ki1 = 817407.556227432;
+          ki2 = 1029055.14432728;
+          ki3 = 135655.887835558;
+
+          kp1 = 59024.1845333278;
+          kp2 = 74307.0458194346;
+          kp3 = 9795.57638736892;
+
+          kd1 = 1065.51937686486;
+          kd2 = 1341.40942029426;
+          kd3 = 176.832200746595;
+end
 
 if tiempo < 1e-5
     Int_Err = [0;0;0];
+    qdf1_1 = 0;
+    qdf2_1 = 0;
+    qdf3_1 = 0;
 end
+
+% Filtramos la velocidad
+tau_af = 50*2*pi;
+    
+qdf1 = (Tm*qd1 + tau_af*qdf1_1)/(tau_af + Tm);
+qdf1_1 = qdf1;
+qd1 = qdf1;
+
+qdf2 = (Tm*qd2 + tau_af*qdf2_1)/(tau_af + Tm);
+qdf2_1 = qdf2;
+qd2 = qdf2;
+
+qdf3 = (Tm*qd3 + tau_af*qdf3_1)/(tau_af + Tm);
+qdf3_1 = qdf3;
+qd3 = qdf3;
 
 Err_q = [qr1-q1;qr2-q2;qr3-q3];
 Err_qd = [qdr1-qd1;qdr2-qd2;qdr3-qd3];
@@ -69,24 +106,39 @@ g = 9.81;
 % PID analitico sin cancelacion     <- 2
 % PID frecuencial sin cancelacion   <- 3
     if control == 1 || control == 2 || control == 3
-        Tau = u;
+        Im = u;
         
 % Precompensacion de G              <- 4
     elseif control == 4
-        Tau = u + G;        
+        Im = u + G;        
         
 % Precompensacion de V y G          <- 5
     elseif control == 5
-        Tau = u + V + G;
+        Im = u + V + G;
         
 % Feed forward                      <- 6
     elseif control == 6
-        Tau = M*[qddr1;qddr2;qddr3] + V + G + u;
+        Im = M*[qddr1;qddr2;qddr3] + V + G + u;
         
 % Control por par calculado         <- 7
     elseif control == 7
-        Tau = M*([qddr1;qddr2;qddr3] + u) + V + G;
+        Im = M*([qddr1;qddr2;qddr3] + u) + V + G;
          
     else
         disp('Ese numero se corresponde con ningun control')
     end
+    
+    % Filtro en discreto aproximado por Euler II
+    % Diseñado para ponerse tras el control
+    %                1
+    %   G(s) = ------------
+    %          Tau_af s + 1
+    %
+    % ufk = (Tm*uk + tau_af*ufk1)/(tau_af + Tm)
+    
+    % Entiendo que si se pone delante del control sería:
+    % ufk = (Tm*ek + tau_af*ufk1)/(tau_af + Tm)
+    
+    % tau_af = tsbc/30
+    
+    
