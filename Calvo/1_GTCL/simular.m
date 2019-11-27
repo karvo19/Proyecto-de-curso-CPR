@@ -4,7 +4,7 @@ clear
 Tsim = 2;
 XYZini = CinematicaDirecta([0 0 0]);
 XYZfin = CinematicaDirecta([1 1 1]);%([pi 3*pi/4 -pi/5]);
-n = 98;
+n = 5;
 t_ini = 0.5;
 duracion = 1;
 
