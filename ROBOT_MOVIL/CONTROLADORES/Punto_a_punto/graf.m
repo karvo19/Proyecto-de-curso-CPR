@@ -13,10 +13,13 @@ sim('Robot_diferencial_punto');
 
 % axis tight equal;
 figure(1);
-plot(xyp(:,1),xyp(:,2)); grid on;title('Plano XY');legend('robot');hold on;
+plot(xyp(:,1),xyp(:,2)); grid on;title('Plano XY');hold on;
 plot([0 0],[min(xyp(:,2))-1 max(xyp(:,2))+1],'k'); hold on;
 plot([min(xyp(:,1))-1 max(xyp(:,1))+1],[0 0],'k'); hold on;
 DibujaTriangulo;
+plot(3,3,'gd')
+legend('Trayectoria', 'eje x', 'eje y', 'Pose inicial', 'Punto objetivo');
+
 
 figure(2);
 subplot(2,1,1);plot(t,w_ref(:,1),t,w_ref_sat(:,1)); grid on;title('Velocidades de referencia (ruedas)'); legend('w_i','w_i^{sat}');

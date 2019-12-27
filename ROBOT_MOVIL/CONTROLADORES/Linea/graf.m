@@ -30,6 +30,7 @@ plot([0 0],[min(xyp(:,2))-1 max(xyp(:,2))+1],'k'); hold on;
 plot([min(xyp(:,1))-1 max(xyp(:,1))],[0 0],'k'); hold on;
 plot(x_l,y_l,'--k');
 DibujaTriangulo;
+legend('Trayectoria seguida', 'eje x', 'eje y', 'Trayectoria de referencia', 'Pose inicial');
 
 figure(2);
 subplot(2,1,1);plot(t,w_ref(:,1),t,w_ref_sat(:,1)); grid on;title('Velocidades de referencia (ruedas)'); legend('w_i','w_i^{sat}');
