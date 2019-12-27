@@ -21,7 +21,7 @@ phi_ref = atan2(a,-b);
 
 % Señales de control
 v = 1;
-phi_d = Kd*d + Kh * angdiff( phi_ref , phi );
+phi_d = Kd*d + Kh * angdiff(phi_ref, phi);
 
 out = Modelo_Cinematico_Inverso([v phi_d]);
 out=[out d];

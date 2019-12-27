@@ -11,15 +11,15 @@ y_ref = in(5);
 Kh = 5;     % Proporcional a la orientacion
 
 % Orientación y distancia de referencia
-phi_ref = atan2( (y_ref - y) , (x_ref - x) );
+phi_ref = atan2((y_ref - y), (x_ref - x));
 d_ref = 0.1;    % Distancia de persecución
 
 % Error de seguimiento
-e = sqrt((x_ref - x)^2+(y_ref - y)^2) - d_ref;
+e = sqrt((x_ref - x)^2 + (y_ref - y)^2) - d_ref;
 
 
 % Señales de control
-phi_d = Kh * angdiff( phi , phi_ref );
+phi_d = Kh * angdiff(phi_ref, phi);
 
 out = [e phi_d];
 end
