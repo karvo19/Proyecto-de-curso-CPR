@@ -15,7 +15,7 @@ frec=5;
  CI = [0 0 atan(A)];     % X_ini Y_ini Phi_ini    ;  Phi = atan(y_d/x_d) = atan(-2x + A);
 
 
-sim('Robot_diferencial');
+sim('Robot_diferencial_cinematica');
 
 
 % figure(1); %%parabola con generador
